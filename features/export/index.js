@@ -48,14 +48,14 @@ export function downloadPDF(docData) {
         tableWidth: contentW,
         styles: baseStyle,
         columnStyles: {
-            0: { cellWidth: 22, fontStyle: 'bold', fillColor: whiteFill },
-            1: { fontStyle: 'bold', fillColor: yellowFill },
-            2: { cellWidth: 18, fontStyle: 'bold', fillColor: whiteFill },
-            3: { cellWidth: 28, fontStyle: 'bold', fillColor: yellowFill },
-            4: { cellWidth: 18, fontStyle: 'bold', fillColor: whiteFill },
-            5: { cellWidth: 28, fontStyle: 'bold', fillColor: yellowFill },
-            6: { cellWidth: 22, fontStyle: 'bold', fillColor: whiteFill },
-            7: { fontStyle: 'bold', fillColor: yellowFill },
+            0: { cellWidth: 20, fontStyle: 'bold', fillColor: whiteFill },
+            1: { cellWidth: 60, fontStyle: 'bold', fillColor: yellowFill }, // Increased Name/Designation width
+            2: { cellWidth: 15, fontStyle: 'bold', fillColor: whiteFill },
+            3: { cellWidth: 25, fontStyle: 'bold', fillColor: yellowFill },
+            4: { cellWidth: 15, fontStyle: 'bold', fillColor: whiteFill },
+            5: { cellWidth: 25, fontStyle: 'bold', fillColor: yellowFill },
+            6: { cellWidth: 25, fontStyle: 'bold', fillColor: whiteFill },
+            7: { cellWidth: 92, fontStyle: 'bold', fillColor: yellowFill }, // Balance/Range width
         },
         body: [
             ['NAME', docData.user.name, 'D.O.B', docData.user.dob, 'D.O.J', docData.user.doj, '3 YRS COMP', docData.user.threeYrComp],
@@ -78,10 +78,10 @@ export function downloadPDF(docData) {
             halign: 'center', valign: 'middle', textColor: [0, 0, 0],
         },
         columnStyles: {
-            0: { cellWidth: 22 }, 1: { cellWidth: 22 }, 2: { cellWidth: 14 },
-            3: { cellWidth: 26 }, 4: { cellWidth: 14 }, 5: { cellWidth: 18 },
-            6: { cellWidth: 22 }, 7: { cellWidth: 22 }, 8: { cellWidth: 18 },
-            9: { cellWidth: 'auto' },
+            0: { cellWidth: 25 }, 1: { cellWidth: 25 }, 2: { cellWidth: 16 },
+            3: { cellWidth: 35 }, 4: { cellWidth: 18 }, 5: { cellWidth: 22 },
+            6: { cellWidth: 25 }, 7: { cellWidth: 25 }, 8: { cellWidth: 22 },
+            9: { cellWidth: 64 }, // Reduced last column width
         },
         head: [
             [
