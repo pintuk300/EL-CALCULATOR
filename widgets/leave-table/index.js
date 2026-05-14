@@ -80,13 +80,35 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                 <td class="total-days-cell"></td>
                 <td class="earned-leave-cell"></td>
                 <td class="credit-cell"></td>
-                <td class="yellow-cell"><input type="text" class="leave-from-input" value="${savedRow.leaveFrom || ''}"></td>
-                <td class="yellow-cell"><input type="text" class="leave-to-input" value="${savedRow.leaveTo || ''}"></td>
+                <td class="yellow-cell">
+                    <div class="date-input-container">
+                        <input type="text" class="leave-from-input" value="${savedRow.leaveFrom || ''}">
+                        <button class="clear-icon-btn row-clear" data-clear-type="from">×</button>
+                    </div>
+                </td>
+                <td class="yellow-cell">
+                    <div class="date-input-container">
+                        <input type="text" class="leave-to-input" value="${savedRow.leaveTo || ''}">
+                        <button class="clear-icon-btn row-clear" data-clear-type="to">×</button>
+                    </div>
+                </td>
                 <td class="leave-taken-cell"></td>
                 <td class="balance-cell"></td>
             `;
 
             tbody.appendChild(tr);
+
+            // Setup row clear buttons
+            tr.querySelectorAll('.row-clear').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const type = e.target.dataset.clearType;
+                    const input = tr.querySelector(type === 'from' ? '.leave-from-input' : '.leave-to-input');
+                    if (input) {
+                        input.value = '';
+                        updateTable();
+                    }
+                });
+            });
 
             // Calculations
             const absentDays = parseInt(savedRow.absent) || 0;
