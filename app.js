@@ -13,13 +13,34 @@ document.addEventListener('DOMContentLoaded', () => {
     // 3. Initialize Leave Table
     const leaveTable = renderLeaveTable('leaveTableContainer', savedData.rows || [], getUserInfo());
     
-    // 4. Connect Form to Table
+    // 4. Update Stats Function
+    function updateDashboardStats() {
+        const tableData = leaveTable.getData();
+        let totalDays = 0;
+        let earned = 0;
+        let taken = 0;
+
+        tableData.forEach(row => {
+            // totalDays format is "duty÷divisor", let's extract duty
+            const duty = parseInt(row.col1.split('÷')[0]) || 0; // Wait, column 3 in data is dutyDays
+            // Actually let's use the internal data from leaveTable if needed, 
+            // but for now let's just sum up the rendered cells
+            earned += parseInt(row.earnedLeave) || 0;
+            taken += parseInt(row.leaveTaken) || 0;
+        });
+
+        document.getElementById('statLeaveEarned').textContent = earned;
+        document.getElementById('statLeaveTaken').textContent = taken;
+    }
+
+    // 5. Connect Form to Table
     document.getElementById('userInfoFormContainer').addEventListener('user-info-change', (e) => {
         leaveTable.update(e.detail);
+        updateDashboardStats();
         saveAllData();
     });
 
-    // 5. Global Actions
+    // 6. Global Actions
     document.getElementById('clearAllBtn').addEventListener('click', () => {
         if (confirm('क्या आप सभी डेटा मिटाना चाहते हैं?')) {
             clearProjectData();
@@ -33,7 +54,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const userInfo = getUserInfo();
         const tableRows = leaveTable.getData();
         
-        // Prepare data for PDF
         const docData = {
             user: {
                 name: userInfo.name,
@@ -55,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('saveHtmlBtn').addEventListener('click', () => {
-        alert('Saving as portable HTML is currently being refactored.');
+        alert('Saving as portable HTML feature is under maintenance.');
     });
 
     function saveAllData() {
@@ -65,4 +85,6 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         saveProjectData(data);
     }
+
+    updateDashboardStats();
 });
