@@ -35,36 +35,43 @@ export function renderUserInfoForm(containerId, initialData = {}) {
 
     // Setup Date Inputs
     ['dob', 'doj', 'leaveStart', 'leaveEnd'].forEach(id => {
-        setupMaskedDateInput(document.getElementById(id), () => {
-            const dojVal = document.getElementById('doj').value;
-            const startInp = document.getElementById('leaveStart');
-            const endInp = document.getElementById('leaveEnd');
-            
-            if (id === 'doj') {
-                // Auto-fill Leave Period if they are currently empty
-                if (dojVal.length === 10) {
-                    if (!startInp.value) startInp.value = dojVal;
-                    if (!endInp.value) endInp.value = formatDateToDDMMYYYY(new Date());
-                }
-                updateThreeYearComp();
-            }
-
-            if (id === 'leaveStart' || id === 'doj') {
-                const startVal = startInp.value;
-                if (dojVal.length === 10 && startVal.length === 10) {
-                    const dDate = parseDDMMYYYYDate(dojVal);
-                    const sDate = parseDDMMYYYYDate(startVal);
-                    if (sDate < dDate) {
-                        alert(`त्रुटि: छुट्टी शुरू होने की तारीख (${startVal}) जॉइनिंग डेट (${dojVal}) से पहले नहीं हो सकती।`);
-                        startInp.value = dojVal; // Reset to DOJ
-                    }
-                }
-            }
-
+        const el = document.getElementById(id);
+        setupMaskedDateInput(el, () => {
+            validateDates();
             // Trigger global change
             container.dispatchEvent(new CustomEvent('user-info-change', { detail: getUserInfoData() }));
         });
+
+        // Additional check on blur (when leaving the field)
+        el.addEventListener('blur', () => {
+            validateDates();
+            container.dispatchEvent(new CustomEvent('user-info-change', { detail: getUserInfoData() }));
+        });
     });
+
+    function validateDates() {
+        const dojVal = document.getElementById('doj').value;
+        const startInp = document.getElementById('leaveStart');
+        const endInp = document.getElementById('leaveEnd');
+        const startVal = startInp.value;
+
+        // Auto-fill logic
+        if (dojVal.length === 10) {
+            if (!startInp.value) startInp.value = dojVal;
+            if (!endInp.value) endInp.value = formatDateToDDMMYYYY(new Date());
+            updateThreeYearComp();
+        }
+
+        // Strict DOJ Validation
+        if (dojVal.length === 10 && startVal.length === 10) {
+            const dDate = parseDDMMYYYYDate(dojVal);
+            const sDate = parseDDMMYYYYDate(startVal);
+            if (sDate < dDate) {
+                alert(`त्रुटि: छुट्टी शुरू होने की तारीख (${startVal}) जॉइनिंग डेट (${dojVal}) से पहले नहीं हो सकती।`);
+                startInp.value = dojVal; // Force reset to DOJ
+            }
+        }
+    }
 
     // Setup Sanitizers
     ['openingBalance'].forEach(id => {
