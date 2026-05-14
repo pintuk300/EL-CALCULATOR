@@ -95,9 +95,16 @@ export function setupMaskedDateInput(inputElement, onComplete) {
                 const year = parseInt(parts[2], 10);
                 if (year >= 1000) {
                     this._kd_yearWasIncomplete = false;
-                    // Trigger custom event or logic for jump
-                    const event = new CustomEvent('year-complete', { detail: { value: this.value } });
-                    this.dispatchEvent(event);
+                    // Auto-jump to next focusable input
+                    setTimeout(() => {
+                        const focusable = Array.from(document.querySelectorAll('input, [contenteditable="true"]'))
+                            .filter(el => !el.disabled && el.offsetParent !== null && !el.classList.contains('clear-icon-btn'));
+                        const index = focusable.indexOf(this);
+                        if (index > -1 && focusable[index + 1]) {
+                            focusable[index + 1].focus();
+                            if (focusable[index + 1].select) focusable[index + 1].select();
+                        }
+                    }, 50);
                 }
             }
         }
