@@ -44,11 +44,12 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
             return;
         }
 
-        // Get custom boundaries from current table state (leaveTo dates)
+        // Get custom boundaries from current table state (Column 7 Leave From dates)
         const customBoundaries = Array.from(tbody.querySelectorAll('tr')).map(row => {
+            const leaveFrom = row.querySelector('.leave-from-input')?.value;
             const leaveTo = row.querySelector('.leave-to-input')?.value;
-            return parseDDMMYYYYDate(leaveTo);
-        }).filter(d => d);
+            return [parseDDMMYYYYDate(leaveFrom), parseDDMMYYYYDate(leaveTo)];
+        }).flat().filter(d => d);
 
         const periods = splitPeriodByEffectiveDates(startDate, endDate, userInfo.doj, customBoundaries);
         
