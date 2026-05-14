@@ -39,6 +39,19 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
         const startDate = parseDDMMYYYYDate(userInfo.leaveStart);
         const endDate = parseDDMMYYYYDate(userInfo.leaveEnd);
 
+        // Save focus state
+        const activeEl = document.activeElement;
+        let focusInfo = null;
+        if (activeEl && activeEl.tagName === 'INPUT') {
+            const row = activeEl.closest('tr');
+            if (row && row.parentNode === tbody) {
+                focusInfo = {
+                    index: Array.from(tbody.children).indexOf(row),
+                    className: activeEl.className
+                };
+            }
+        }
+
         if (!startDate || !endDate || endDate < startDate) {
             tbody.innerHTML = '';
             return;
@@ -154,6 +167,20 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                 updateTable();
             });
         });
+
+        // Restore Focus
+        if (focusInfo && tbody.children[focusInfo.index]) {
+            const targetRow = tbody.children[focusInfo.index];
+            const targetInput = targetRow.querySelector(`.${focusInfo.className.replace(/\s+/g, '.')}`);
+            if (targetInput) {
+                targetInput.focus();
+                // Move cursor to end if it's an input
+                if (targetInput.tagName === 'INPUT') {
+                    const val = targetInput.value;
+                    targetInput.setSelectionRange(val.length, val.length);
+                }
+            }
+        }
     }
 
     updateTable();
