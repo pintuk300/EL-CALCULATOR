@@ -135,7 +135,17 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
             tr.querySelector('.balance-cell').textContent = cumulativeCredit - leaveTaken;
 
             // Setup inputs
-            setupMaskedDateInput(tr.querySelector('.leave-from-input'), () => updateTable());
+            setupMaskedDateInput(tr.querySelector('.leave-from-input'), () => {
+                const val = tr.querySelector('.leave-from-input').value;
+                if (val.length === 10) {
+                    const lFrom = parseDDMMYYYYDate(val);
+                    if (lFrom < period.start) {
+                        alert(`त्रुटि: कॉलम 7 की तारीख (${val}) कॉलम 1 की तारीख (${formatDateToDDMMYYYY(period.start)}) से पहले नहीं हो सकती।`);
+                        tr.querySelector('.leave-from-input').value = '';
+                    }
+                }
+                updateTable();
+            });
             setupMaskedDateInput(tr.querySelector('.leave-to-input'), () => updateTable());
             
             tr.querySelector('.absent-cell').addEventListener('input', (e) => {
