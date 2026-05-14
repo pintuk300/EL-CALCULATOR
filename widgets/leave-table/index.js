@@ -151,6 +151,9 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                         if (lFrom <= period.start) {
                             alert(`त्रुटि: कॉलम 7 की तारीख (${val}) कॉलम 1 की तारीख (${formatDateToDDMMYYYY(period.start)}) के बराबर या उससे पहले नहीं हो सकती।`);
                             tr.querySelector('.leave-from-input').value = '';
+                        } else {
+                            // Column 7 to Column 8 Jump
+                            window._pendingTableJump = { rowIndex: index, colClass: '.leave-to-input' };
                         }
                     }
                     updateTable();
@@ -202,6 +205,18 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
             if (targetInput && document.activeElement !== targetInput) {
                 targetInput.focus();
             }
+        }
+
+        // Handle Auto-Jump
+        if (window._pendingTableJump) {
+            const { rowIndex, colClass } = window._pendingTableJump;
+            const targetRow = tbody.children[rowIndex];
+            const targetInput = targetRow?.querySelector(colClass);
+            if (targetInput) {
+                targetInput.focus();
+                if (targetInput.select) targetInput.select();
+            }
+            delete window._pendingTableJump;
         }
     }
 
