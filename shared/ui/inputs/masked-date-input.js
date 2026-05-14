@@ -97,16 +97,17 @@ export function setupMaskedDateInput(inputElement, onComplete) {
                     this._kd_yearWasIncomplete = false;
                     // Auto-jump to next focusable input
                     setTimeout(() => {
-                        // Use activeElement as reference if original 'this' is detached
-                        const currentInput = document.contains(this) ? this : document.activeElement;
-                        const focusable = Array.from(document.querySelectorAll('input, [contenteditable="true"]'))
+                        // Use activeElement as the most reliable reference after a re-render
+                        const currentInput = document.activeElement && document.activeElement.tagName === 'INPUT' ? document.activeElement : this;
+                        const allInputs = Array.from(document.querySelectorAll('input, [contenteditable="true"]'))
                             .filter(el => !el.disabled && el.offsetParent !== null && !el.classList.contains('clear-icon-btn'));
-                        const index = focusable.indexOf(currentInput);
-                        if (index > -1 && focusable[index + 1]) {
-                            focusable[index + 1].focus();
-                            if (focusable[index + 1].select) focusable[index + 1].select();
+                        
+                        const index = allInputs.indexOf(currentInput);
+                        if (index > -1 && allInputs[index + 1]) {
+                            allInputs[index + 1].focus();
+                            if (allInputs[index + 1].select) allInputs[index + 1].select();
                         }
-                    }, 100); // Slightly more delay for table re-render
+                    }, 150); // Increased delay for stability
                 }
             }
         }
