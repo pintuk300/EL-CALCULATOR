@@ -36,7 +36,18 @@ export function renderUserInfoForm(containerId, initialData = {}) {
     // Setup Date Inputs
     ['dob', 'doj', 'leaveStart', 'leaveEnd'].forEach(id => {
         setupMaskedDateInput(document.getElementById(id), () => {
-            if (id === 'doj') updateThreeYearComp();
+            if (id === 'doj') {
+                const dojVal = document.getElementById('doj').value;
+                const startInp = document.getElementById('leaveStart');
+                const endInp = document.getElementById('leaveEnd');
+                
+                // Auto-fill Leave Period if they are currently empty
+                if (dojVal.length === 10) {
+                    if (!startInp.value) startInp.value = dojVal;
+                    if (!endInp.value) endInp.value = formatDateToDDMMYYYY(new Date());
+                }
+                updateThreeYearComp();
+            }
             // Trigger global change
             container.dispatchEvent(new CustomEvent('user-info-change', { detail: getUserInfoData() }));
         });
