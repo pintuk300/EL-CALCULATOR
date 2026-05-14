@@ -64,26 +64,42 @@
 .yellow-cell input {
     background-color: transparent;
     border: none;
+    outline: none;
     width: 100%;
     height: 100%;
     padding: 8px;
     font-weight: bold;
     text-align: center;
+    box-sizing: border-box;
+}
+
+.yellow-cell:focus-within {
+    outline: 1px solid #1e293b;
 }
 
 .date-input-container {
     display: flex;
     align-items: center;
     width: 100%;
+    height: 100%;
+    box-sizing: border-box;
 }
 
 .date-input-container input {
     flex: 1;
     border: none;
+    outline: none; /* Remove the jumping black outline */
     background: transparent;
     font-weight: bold;
-    padding: 6px;
-    font-size: 14px;
+    padding: 4px 6px;
+    font-size: 13px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.date-input-container:focus-within {
+    background-color: rgba(0, 0, 0, 0.05); /* Subtle highlight inside the cell */
+    outline: 1px solid #1e293b; /* Clean, contained outline */
 }
 
 .header-numbers th {
