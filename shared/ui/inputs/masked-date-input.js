@@ -75,22 +75,27 @@ export function setupMaskedDateInput(inputElement, onComplete) {
     inputElement.addEventListener('input', (e) => {
         applyStrictDateMask(inputElement);
         if (inputElement.value.length === 10) {
-            // Year complete logic (last 4 digits)
-            const parts = inputElement.value.split('-');
-            if (parts.length === 3 && parts[2].length === 4) {
-                // Potential jump
-                setTimeout(() => {
-                    const currentInput = document.activeElement && document.activeElement.tagName === 'INPUT' ? document.activeElement : inputElement;
-                    const allInputs = Array.from(document.querySelectorAll('input, [contenteditable="true"]'))
-                        .filter(el => !el.disabled && el.offsetParent !== null && !el.classList.contains('clear-icon-btn'));
-                    const index = allInputs.indexOf(currentInput);
-                    if (index > -1 && allInputs[index + 1]) {
-                        allInputs[index + 1].focus();
-                        if (allInputs[index + 1].select) allInputs[index + 1].select();
-                    }
-                }, 10); // Very short delay
-            }
+            // Check if focus was already moved by onComplete
+            const initialActive = document.activeElement;
+            
             if (onComplete) onComplete(inputElement.value);
+            
+            // If focus is still on the same element, proceed with global jump
+            if (document.activeElement === initialActive || document.activeElement === inputElement) {
+                const parts = inputElement.value.split('-');
+                if (parts.length === 3 && parts[2].length === 4) {
+                    setTimeout(() => {
+                        const currentInput = document.activeElement && (document.activeElement.tagName === 'INPUT' || document.activeElement.contentEditable === 'true') ? document.activeElement : inputElement;
+                        const allInputs = Array.from(document.querySelectorAll('input, [contenteditable="true"]'))
+                            .filter(el => !el.disabled && el.offsetParent !== null && !el.classList.contains('clear-icon-btn'));
+                        const index = allInputs.indexOf(currentInput);
+                        if (index > -1 && allInputs[index + 1]) {
+                            allInputs[index + 1].focus();
+                            if (allInputs[index + 1].select) allInputs[index + 1].select();
+                        }
+                    }, 10);
+                }
+            }
         }
     });
 
