@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>अर्जित अवकाश कैलकुलेटर | Earn Leave Calculator</title>
+    <link rel="stylesheet" href="shared/ui/buttons/action-buttons.css">
+    <link rel="stylesheet" href="widgets/widgets.css">
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 10mm;
+        }
+
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background-color: #f4f7f6;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .app-container {
+            width: 297mm;
+            background: white;
+            margin: 0 auto;
+            padding: 20px 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        .app-header {
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            padding: 15px;
+            background-color: #c0c0c0;
+            border: 2px solid #000;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding: 0 10px;
+        }
+
+        @media print {
+            body { background: white; padding: 0; }
+            .app-container { box-shadow: none; width: 100%; padding: 0; }
+            .toolbar { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="toolbar">
+        <button id="saveHtmlBtn" class="btn-base btn-save">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+            Save (HTML)
+        </button>
+        <button id="clearAllBtn" class="btn-base btn-clear">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line></svg>
+            Clear All
+        </button>
+        <button id="printBtn" class="btn-base btn-print">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+            Print
+        </button>
+        <button id="downloadPdfBtn" class="btn-base btn-pdf">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="12" y1="18" x2="12" y2="12"></line><polyline points="9 15 12 18 15 15"></polyline></svg>
+            PDF Download
+        </button>
+    </div>
+
+    <div class="app-container">
+        <div class="app-header">अर्जित अवकाश कैलकुलेटर (Unutilized Earn Leave Calculator)</div>
+        <div id="userInfoFormContainer"></div>
+        <div id="leaveTableContainer"></div>
+    </div>
+
+    <!-- External Libs -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    
+    <!-- Main App Module -->
+    <script type="module" src="app.js"></script>
+</body>
+</html>

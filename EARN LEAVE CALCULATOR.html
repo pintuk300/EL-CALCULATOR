@@ -1,0 +1,1993 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unutilized Earn Leave Calculator</title>
+    <style>
+        @page {
+            size: A4 landscape;
+            margin: 10mm;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+
+        .container {
+            width: 297mm;
+            height: 210mm;
+            background: white;
+            margin: 0 auto;
+            padding: 10px 50px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            text-align: center;
+            font-size: 20px;
+            font-weight: bold;
+            padding: 10px;
+            background-color: #c0c0c0;
+            border: 2px solid #000;
+            margin-bottom: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 5px;
+        }
+
+        td, th {
+            border: 1px solid #000;
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        .label-cell {
+            background-color: #fff;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+
+        .value-cell {
+            background-color: #fff0a0;
+            font-weight: bold;
+            padding: 8px;
+        }
+
+        .gray-header {
+            background-color: #c0c0c0;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .service-table {
+            width: 100%;
+            margin-bottom: 5px;
+        }
+
+        .service-table td {
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .service-number {
+            background-color: #ffcc99;
+            font-size: 24px;
+            width: 80px;
+        }
+
+        .service-label {
+            background-color: #ffcc99;
+            text-transform: uppercase;
+        }
+
+        .calculator-section {
+            background-color: #90ee90;
+            text-align: center;
+            font-weight: bold;
+            padding: 8px;
+            font-size: 14px;
+        }
+
+        .date-range {
+            background-color: #90ee90;
+            text-align: center;
+            font-weight: bold;
+            padding: 8px;
+        }
+
+        .detail-table {
+            width: 100%;
+        }
+
+        .detail-table th {
+            background-color: #add8e6;
+            font-size: 11px;
+            padding: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .detail-table td {
+            text-align: center;
+            font-size: 12px;
+        }
+
+        .column-header {
+            background-color: #add8e6;
+            font-weight: bold;
+        }
+
+        .yellow-cell {
+            background-color: #fff0a0;
+            width: 140px;
+            max-width: 140px;
+        }
+
+        .detail-table td:nth-child(3),
+        .detail-table th:nth-child(3) {
+            width: 50px;
+            max-width: 50px;
+        }
+
+        .detail-table td:nth-child(4),
+        .detail-table th:nth-child(4) {
+            white-space: nowrap;
+            width: auto;
+        }
+
+        .detail-table td:nth-child(1),
+        .detail-table th:nth-child(1),
+        .detail-table td:nth-child(2),
+        .detail-table th:nth-child(2) {
+            white-space: nowrap;
+            width: 1px;
+            padding-left: 6px;
+            padding-right: 6px;
+        }
+
+        .detail-table td:nth-child(5),
+        .detail-table th:nth-child(5),
+        .detail-table td:nth-child(6),
+        .detail-table th:nth-child(6) {
+            white-space: nowrap;
+            width: 1px;
+            padding-left: 4px;
+            padding-right: 4px;
+        }
+
+        .detail-table td:nth-child(9),
+        .detail-table th:nth-child(9),
+        .detail-table td:nth-child(10),
+        .detail-table th:nth-child(10) {
+            white-space: nowrap;
+            width: auto;
+            min-width: 70px;
+            padding-left: 6px;
+            padding-right: 6px;
+        }
+
+        .negative {
+            color: red;
+        }
+
+        .absent-cell:focus {
+            outline: 1px dashed #666;
+            background-color: #f7f7f7;
+        }
+
+        .credit-cell-content {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            height: 100%;
+            padding: 2px;
+        }
+
+        .credit-first-line {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .credit-value {
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .credit-or {
+            font-size: 10px;
+        }
+
+        .credit-max {
+            font-size: 10px;
+            align-self: center;
+        }
+
+        select, input[type="date"], input[type="text"], input[type="number"] {
+            background-color: #fff0a0;
+            font-weight: bold;
+            padding: 6px;
+            font-size: 14px;
+            font-family: Arial, sans-serif;
+            width: 100%;
+            box-sizing: border-box;
+            border: none;
+        }
+
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        input[type="number"] {
+            -moz-appearance: textfield;
+            appearance: textfield;
+        }
+
+        select {
+            cursor: pointer;
+        }
+
+        .date-input-container {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            gap: 0;
+            position: relative;
+        }
+
+        .date-input-container input {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .yellow-cell .date-input-container input[type="date"] {
+            color: transparent;
+        }
+
+        .yellow-cell .date-input-container input[type="date"]::-webkit-datetime-edit {
+            color: transparent;
+        }
+
+        .yellow-cell .date-input-container input[type="date"]:focus,
+        .yellow-cell .date-input-container input[type="date"].has-value {
+            color: #000;
+        }
+
+        .yellow-cell .date-input-container input[type="date"]:focus::-webkit-datetime-edit,
+        .yellow-cell .date-input-container input[type="date"].has-value::-webkit-datetime-edit {
+            color: #000;
+        }
+
+        .clear-btn {
+            background: transparent;
+            color: #666;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            font-size: 12px;
+            font-weight: bold;
+            border-radius: 2px;
+            width: 16px;
+            height: 16px;
+            min-width: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .clear-btn:hover {
+            color: #000;
+        }
+
+        .pdf-btn-wrapper {
+            width: 297mm;
+            margin: 0 auto 12px auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pdf-download-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #8e2de2, #4a00e0);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 22px;
+            font-size: 15px;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(74, 0, 224, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+            letter-spacing: 0.3px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .pdf-download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 0, 224, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .pdf-download-btn:active {
+            transform: translateY(0);
+        }
+
+        .pdf-download-btn svg {
+            flex-shrink: 0;
+        }
+
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+            .container {
+                box-shadow: none;
+                width: 100%;
+                height: 100%;
+            }
+            .clear-btn {
+                display: none;
+            }
+            .pdf-btn-wrapper {
+                display: none;
+            }
+        }
+
+        .save-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #0f4d19, #1b7a2d);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 22px;
+            font-size: 15px;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+            letter-spacing: 0.3px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .save-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.5);
+            filter: brightness(1.2);
+        }
+
+        .save-btn:active {
+            transform: translateY(0);
+        }
+
+        .clear-all-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #c0392b, #e74c3c);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 22px;
+            font-size: 15px;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+            letter-spacing: 0.3px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .clear-all-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(231, 76, 60, 0.5);
+            filter: brightness(1.15);
+        }
+
+        .clear-all-btn:active {
+            transform: translateY(0);
+        }
+
+        .print-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(135deg, #2980b9, #3498db);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 22px;
+            font-size: 15px;
+            font-weight: bold;
+            font-family: Arial, sans-serif;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+            transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+            letter-spacing: 0.3px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        .print-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.5);
+            filter: brightness(1.1);
+        }
+
+        .print-btn:active {
+            transform: translateY(0);
+        }
+    </style>
+    <script id="portableData">const PORTABLE_DATA = {"name":"","designation":"","dob":"","doj":"2022-09-06","leaveStart":"2022-09-06","leaveEnd":"2026-05-13","openingBalance":"","rows":[{"col1":"06-09-2022","col2":"13-03-2025","absent":"","leaveFrom":"2025-03-04","leaveTo":"2025-03-13"},{"col1":"14-03-2025","col2":"29-05-2025","absent":"","leaveFrom":"2025-05-07","leaveTo":"2025-05-29"},{"col1":"30-05-2025","col2":"05-09-2025","absent":"","leaveFrom":"","leaveTo":""},{"col1":"06-09-2025","col2":"10-05-2026","absent":"","leaveFrom":"2026-02-11","leaveTo":"2026-05-10"},{"col1":"11-05-2026","col2":"13-05-2026","absent":"","leaveFrom":"","leaveTo":""}]};</script>
+</head>
+<body>
+    <div class="pdf-btn-wrapper">
+        <button class="save-btn" onclick="saveAsHTML()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                <polyline points="7 3 7 8 15 8"></polyline>
+            </svg>
+            Save (HTML)
+        </button>
+        <button class="clear-all-btn" onclick="clearAllData()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="3 6 5 6 21 6"></polyline>
+                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                <line x1="10" y1="11" x2="10" y2="17"></line>
+                <line x1="14" y1="11" x2="14" y2="17"></line>
+            </svg>
+            Clear All
+        </button>
+        <button class="print-btn" onclick="window.print()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            Print
+        </button>
+        <button class="pdf-download-btn" onclick="downloadPDF()">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="12" y1="18" x2="12" y2="12"></line>
+                <polyline points="9 15 12 18 15 15"></polyline>
+            </svg>
+            PDF Download
+        </button>
+    </div>
+
+    <div class="container">
+        <div class="header">UNUTILIZED EARN LEAVE CALCULATOR</div>
+        
+        <table>
+            <tbody><tr>
+                <td class="label-cell">NAME</td>
+                <td class="value-cell"><div class="date-input-container"><input type="text" value=""><button class="clear-btn" onclick="clearTextInput(this)">×</button></div></td>
+                <td class="label-cell">D.O.B</td>
+                <td class="value-cell"><div class="date-input-container"><input type="text" id="dob" value="" placeholder="DD-MM-YYYY" maxlength="10" class="strict-date"><button class="clear-btn" onclick="clearMainDate('dob')">×</button></div></td>
+                <td class="label-cell">D.O.J</td>
+                <td class="value-cell"><div class="date-input-container"><input type="text" id="dateOfJoining" value="" placeholder="DD-MM-YYYY" maxlength="10" class="strict-date"><button class="clear-btn" onclick="clearMainDate('dateOfJoining')">×</button></div></td>
+                <td class="label-cell">3 YRS COMP</td>
+                <td class="value-cell" style="text-align: left; padding: 2px 5px;"><span id="threeYearRange" style="font-weight: bold; color: #b30000; font-size: 11px;"></span></td>
+            </tr>
+            <tr>
+                <td class="label-cell">DESIGNATION</td>
+                <td class="value-cell"><div class="date-input-container"><input type="text" value=""><button class="clear-btn" onclick="clearTextInput(this)">×</button></div></td>
+                <td class="label-cell">LEAVE FROM</td>
+                <td class="value-cell"><div class="date-input-container"><input type="text" id="leaveStartDate" value="" placeholder="DD-MM-YYYY" maxlength="10" class="strict-date"><button class="clear-btn" onclick="clearMainDate('leaveStartDate')">×</button></div></td>
+                <td class="label-cell">TO</td>
+                <td class="value-cell"><div class="date-input-container"><input type="text" id="leaveEndDate" value="" placeholder="DD-MM-YYYY" maxlength="10" class="strict-date"><button class="clear-btn" onclick="clearMainDate('leaveEndDate')">×</button></div></td>
+                <td class="label-cell">BALANCE EL</td>
+                <td class="value-cell"><div class="date-input-container"><input type="number" id="openingBalance" value="" min="0" placeholder=""><button class="clear-btn" onclick="clearTextInput(this)">×</button></div></td>
+            </tr>
+        </tbody></table>
+
+        <table class="detail-table">
+            <tbody><tr>
+                <th colspan="2">DUTY PERIOD</th>
+                <th rowspan="2">ABSENT<br>(IN DAYS)</th>
+                <th rowspan="2">TOTAL NO. OF<br>DAYS</th>
+                <th rowspan="2">LEAVE<br>EARNED<br>(IN<br>DAYS)</th>
+                <th rowspan="2">EARNED<br>LEAVE AT<br>CREDIT<br>(10+5)</th>
+                <th colspan="2">UNUTILIZED LEAVE TAKEN PERIOD</th>
+                <th rowspan="2">NO. OF DAYS<br>UNUTILIZED<br>LEAVE TAKEN</th>
+                <th rowspan="2">BALANCE OF<br>UNUTILIZED EARN<br>LEAVE ON RETURN<br>FROM LEAVE TAKEN<br>(6-9)</th>
+            </tr>
+            <tr>
+                <th>FROM</th>
+                <th>TO</th>
+                <th>FROM</th>
+                <th>TO</th>
+            </tr>
+            <tr>
+                <td class="column-header">1</td>
+                <td class="column-header">2</td>
+                <td class="column-header">3</td>
+                <td class="column-header">4</td>
+                <td class="column-header">5</td>
+                <td class="column-header">6</td>
+                <td class="column-header">7</td>
+                <td class="column-header">8</td>
+                <td class="column-header">9</td>
+                <td class="column-header">10</td>
+            </tr>
+            </tbody><tbody id="dataTableBody"></tbody>
+        </table>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <script>
+        function formatDateToDDMMYYYY(dateValue) {
+            // Hum ab already DD-MM-YYYY use kar rahe hain
+            return dateValue || '';
+        }
+
+        // --- STRICT DATE MASK LOGIC ---
+        function applyStrictDateMask(input, e) {
+            let cursor = input.selectionStart;
+            let raw = input.value;
+            
+            // 1. Split into segments based on dashes
+            let parts = raw.split('-');
+            
+            // If the user just typed a 3rd digit without a dash (e.g. "150"), 
+            // manually push the 3rd digit to the month part
+            if (parts.length === 1 && parts[0].length > 2) {
+                parts[1] = parts[0].substring(2);
+                parts[0] = parts[0].substring(0, 2);
+            }
+            // If the user typed a 3rd digit for month (e.g. "15-082")
+            if (parts.length === 2 && parts[1].length > 2) {
+                parts[2] = parts[1].substring(2);
+                parts[1] = parts[1].substring(0, 2);
+            }
+
+            let ddPart = (parts[0] || '').replace(/[^0-9]/g, '').substring(0, 2);
+            let mmPart = (parts[1] || '').replace(/[^0-9]/g, '').substring(0, 2);
+            let yyyyPart = (parts[2] || '').replace(/[^0-9]/g, '').substring(0, 4);
+
+            // 2. Apply Strict Validation
+            if (ddPart.length > 0) {
+                if (ddPart[0] > '3') ddPart = '3' + (ddPart[1] || '');
+                if (ddPart.length === 2) {
+                    if (ddPart[0] === '3' && ddPart[1] > '1') ddPart = '31';
+                    if (ddPart === '00') ddPart = '01';
+                }
+            }
+            if (mmPart.length > 0) {
+                if (mmPart[0] > '1') mmPart = '1' + (mmPart[1] || '');
+                if (mmPart.length === 2) {
+                    if (mmPart[0] === '1' && mmPart[1] > '2') mmPart = '12';
+                    if (mmPart === '00') mmPart = '01';
+                }
+            }
+
+            // Cross-check Days vs Month
+            if (ddPart.length === 2 && mmPart.length === 2) {
+                let d = parseInt(ddPart);
+                let m = parseInt(mmPart);
+                let max = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+                if (d > max[m]) ddPart = String(max[m]).padStart(2, '0');
+            }
+
+            // 3. Reconstruct
+            let result = ddPart;
+            if (raw.includes('-') || ddPart.length === 2) {
+                result += '-' + mmPart;
+                if (raw.lastIndexOf('-') > 2 || mmPart.length === 2) {
+                    result += '-' + yyyyPart;
+                }
+            }
+
+            // 4. Update and fix cursor
+            let oldLen = raw.length;
+            input.value = result;
+            
+            let newCursor = cursor;
+            // If the character at current cursor is a dash and it's new, skip it
+            if (result[newCursor] === '-' && (raw[newCursor] !== '-' || !raw[newCursor])) {
+                newCursor++;
+            }
+            input.setSelectionRange(newCursor, newCursor);
+        }
+
+        // Global Event Delegation for Strict Date inputs
+        document.addEventListener('input', function(e) {
+            if (e.target && e.target.classList.contains('strict-date')) {
+                applyStrictDateMask(e.target, e);
+                // Trigger regular logic
+                if (e.target.id === 'leaveStartDate') {
+                    window.leaveStartManuallyChanged = true;
+                    // Force update even if not 10 chars yet (to clear table if invalid)
+                    recalculateFirstRowDutyPeriod();
+                } else if (e.target.id === 'leaveEndDate') {
+                    if (e.target.value.length === 10) {
+                        recalculateFirstRowDutyPeriod();
+                    }
+                }
+                saveToLocalStorage();
+            }
+        });
+
+        // Toast notification (non-blocking warning)
+        function showToast(msg, type) {
+            var existing = document.getElementById('dateValidationToast');
+            if (existing) existing.remove();
+            var toast = document.createElement('div');
+            toast.id = 'dateValidationToast';
+            toast.style.cssText = 'position:fixed;top:40px;left:50%;transform:translateX(-50%);' +
+                'background:' + (type === 'warning' ? '#d35400' : '#c0392b') + ';color:#fff;' +
+                'padding:14px 28px;border-radius:10px;font-size:15px;font-weight:bold;' +
+                'z-index:10001;box-shadow:0 6px 20px rgba(0,0,0,0.4);max-width:90vw;text-align:center;' +
+                'border:2px solid rgba(255,255,255,0.2);' +
+                'animation:fadeInOut 5s forwards;';
+            toast.textContent = msg;
+            
+            if (!document.getElementById('toastStyle')) {
+                var style = document.createElement('style');
+                style.id = 'toastStyle';
+                style.textContent = '@keyframes fadeInOut{0%{opacity:0;top:0}10%{opacity:1;top:40px}90%{opacity:1;top:40px}100%{opacity:0;top:0}}';
+                document.head.appendChild(style);
+            }
+            document.body.appendChild(toast);
+            setTimeout(function() { if (toast.parentNode) toast.remove(); }, 5000);
+        }
+
+        function getNextDateDDMMYYYY(dateValue) {
+            if (!dateValue) return '';
+            const parts = dateValue.split('-').map(Number);
+            if (parts.length !== 3) return '';
+            const date = new Date(parts[2], parts[1] - 1, parts[0]);
+            date.setDate(date.getDate() + 1);
+            const dd = String(date.getDate()).padStart(2, '0');
+            const mm = String(date.getMonth() + 1).padStart(2, '0');
+            const yyyy = date.getFullYear();
+            return dd + '-' + mm + '-' + yyyy;
+        }
+
+        function getPreviousDateDDMMYYYY(dateValue) {
+            if (!dateValue) {
+                return '';
+            }
+
+            const parts = dateValue.split('-').map(Number);
+            if (parts.length !== 3) {
+                return '';
+            }
+
+            // parts[0]=DD, parts[1]=MM, parts[2]=YYYY
+            const date = new Date(parts[2], parts[1] - 1, parts[0]);
+            date.setDate(date.getDate() - 1);
+
+            const dd = String(date.getDate()).padStart(2, '0');
+            const mm = String(date.getMonth() + 1).padStart(2, '0');
+            const yyyy = date.getFullYear();
+
+            return dd + '-' + mm + '-' + yyyy;
+        }
+
+        function parseISODate(dateValue) {
+            return parseDDMMYYYYDate(dateValue);
+        }
+
+        function parseDDMMYYYYDate(dateValue) {
+            if (!dateValue) {
+                return null;
+            }
+
+            const parts = dateValue.split('-').map(Number);
+            if (parts.length !== 3) {
+                return null;
+            }
+
+            const date = new Date(parts[2], parts[1] - 1, parts[0]);
+            if (
+                date.getFullYear() !== parts[2] ||
+                date.getMonth() !== parts[1] - 1 ||
+                date.getDate() !== parts[0]
+            ) {
+                return null;
+            }
+
+            return date;
+        }
+
+        function getInclusiveDayCount(startDate, endDate) {
+            const oneDayMs = 24 * 60 * 60 * 1000;
+            return Math.floor((endDate - startDate) / oneDayMs) + 1;
+        }
+
+        function getAbsentDays(absentCell) {
+            const sanitized = absentCell.textContent.replace(/[^0-9]/g, '');
+            if (absentCell.textContent !== sanitized) {
+                absentCell.textContent = sanitized;
+            }
+            return sanitized ? parseInt(sanitized, 10) : 0;
+        }
+
+        function calculateMaxEarnedLeave(startDate, endDate) {
+            if (!endDate) {
+                return 300;
+            }
+
+            const periods = [
+                { until: new Date(1984, 6, 18), max: 120 },
+                { until: new Date(1986, 10, 30), max: 180 },
+                { until: new Date(2005, 2, 31), max: 240 },
+                { until: null, max: 300 }
+            ];
+
+            for (let i = 0; i < periods.length; i++) {
+                if (periods[i].until === null || endDate <= periods[i].until) {
+                    return periods[i].max;
+                }
+            }
+
+            return 300;
+        }
+
+        function recalculateFormulaColumns() {
+            const tbody = document.getElementById('dataTableBody');
+            if (!tbody) return;
+            const dataRows = tbody.querySelectorAll('tr.data-row');
+            if (dataRows.length === 0) return;
+
+            dataRows.forEach(function(row, index) {
+                const cells = row.querySelectorAll('td');
+                const inputs = row.querySelectorAll('input');
+                
+                if (cells.length < 10 || inputs.length < 2) return;
+
+                // Propagate dates from previous row (starting from Row 2)
+                if (index > 0) {
+                    const prevRow = dataRows[index - 1];
+                    const prevCells = prevRow.querySelectorAll('td');
+                    const prevInputs = prevRow.querySelectorAll('input');
+                    
+                    const prevCol2 = prevCells[1].textContent.trim();
+                    const prevCol8 = prevInputs[1].value;
+                    
+                    let nextStart = "";
+                    // STRICT PRIORITY: If Column 8 is filled, it MUST be the source for next row
+                    if (prevCol8 && prevCol8.length === 10) {
+                        nextStart = getNextDateDDMMYYYY(prevCol8);
+                    } else if (prevCol2) {
+                        nextStart = getNextDateDDMMYYYY(prevCol2);
+                    }
+                    
+                    if (nextStart) {
+                        cells[0].textContent = nextStart;
+                    }
+                }
+
+                const col1Date = parseDDMMYYYYDate(cells[0].textContent.trim());
+                
+                // If this row has a LEAVE FROM date, adjust COL 2 (To) to be LeaveFrom - 1
+                const leaveFromVal = inputs[0].value;
+                if (leaveFromVal && leaveFromVal.length === 10) {
+                    const leaveFromObj = parseDDMMYYYYDate(leaveFromVal);
+                    if (leaveFromObj) {
+                        const newCol2 = getPreviousDateDDMMYYYY(leaveFromVal);
+                        cells[1].textContent = newCol2;
+                    }
+                } else {
+                    // Restore original boundary date if no leave
+                    cells[1].textContent = cells[1].getAttribute('data-original-date') || cells[1].textContent;
+                }
+
+                const col2Date = parseDDMMYYYYDate(cells[1].textContent.trim());
+                const absentDays = getAbsentDays(cells[2]);
+                
+                let totalDays = 0;
+                if (col1Date && col2Date) {
+                    totalDays = Math.max(0, Math.floor((col2Date - col1Date) / (1000 * 60 * 60 * 24)) + 1);
+                }
+                const dutyDays = Math.max(0, totalDays - absentDays);
+
+                const threeYrDate = getDOJThreeYearDate();
+                const divisor = (threeYrDate && col1Date && col1Date > threeYrDate) ? 11 : 22;
+                
+                cells[3].textContent = dutyDays + '÷' + divisor;
+                
+                const earned = Math.floor(dutyDays / divisor);
+                cells[4].textContent = earned;
+                
+                // Cumulative logic (previous Col 6 + current Col 5)
+                let prevCredit = 0;
+                if (index === 0) {
+                    const openingBalanceInput = document.getElementById('openingBalance');
+                    prevCredit = parseInt(openingBalanceInput ? openingBalanceInput.value : '0') || 0;
+                } else {
+                    prevCredit = parseInt(dataRows[index - 1].querySelectorAll('td')[5].textContent) || 0;
+                }
+                
+                const currentCredit = prevCredit + earned;
+                cells[5].textContent = currentCredit;
+
+                const leaveTakenDays = parseInt(cells[8].textContent) || 0;
+                cells[9].textContent = currentCredit - leaveTakenDays;
+            });
+
+            updateBalanceEL();
+        }
+
+        function saveToLocalStorage() {
+            const textInputs = document.querySelectorAll('input[type="text"]');
+            const data = {
+                name: textInputs[0] ? textInputs[0].value : '',
+                designation: textInputs[1] ? textInputs[1].value : '',
+                dob: document.getElementById('dob').value,
+                doj: document.getElementById('dateOfJoining').value,
+                leaveStart: document.getElementById('leaveStartDate').value,
+                leaveEnd: document.getElementById('leaveEndDate').value,
+                openingBalance: document.getElementById('openingBalance').value,
+                rows: []
+            };
+
+            const rows = document.querySelectorAll('#dataTableBody tr.data-row');
+            rows.forEach(function(row) {
+                const cells = row.querySelectorAll('td');
+                const dateInputs = row.querySelectorAll('.yellow-cell input.strict-date');
+                data.rows.push({
+                    col1: cells[0].textContent.trim(),
+                    col2: cells[1].getAttribute('data-original-date') || cells[1].textContent.trim(),
+                    absent: cells[2].textContent.trim(),
+                    leaveFrom: dateInputs[0] ? dateInputs[0].value : "",
+                    leaveTo: dateInputs[1] ? dateInputs[1].value : ""
+                });
+            });
+
+            localStorage.setItem('leaveCalculatorData', JSON.stringify(data));
+        }
+
+        function loadFromLocalStorage() {
+            const raw = localStorage.getItem('leaveCalculatorData');
+            if (!raw) return null;
+            try {
+                const data = JSON.parse(raw);
+                const textInputs = document.querySelectorAll('input[type="text"]');
+                if (data.name !== undefined && textInputs[0]) textInputs[0].value = data.name;
+                if (data.designation !== undefined && textInputs[1]) textInputs[1].value = data.designation;
+                if (data.dob !== undefined) document.getElementById('dob').value = data.dob;
+                if (data.doj !== undefined) document.getElementById('dateOfJoining').value = data.doj;
+                if (data.leaveStart !== undefined) document.getElementById('leaveStartDate').value = data.leaveStart;
+                if (data.leaveEnd !== undefined) document.getElementById('leaveEndDate').value = data.leaveEnd;
+                if (data.openingBalance !== undefined) document.getElementById('openingBalance').value = data.openingBalance;
+                return data.rows;
+            } catch (e) {
+                return null;
+            }
+        }
+
+        function saveAsHTML() {
+            // Collect all current data
+            const textInputs = document.querySelectorAll('input[type="text"]');
+            const data = {
+                name: textInputs[0] ? textInputs[0].value : '',
+                designation: textInputs[1] ? textInputs[1].value : '',
+                dob: document.getElementById('dob').value,
+                doj: document.getElementById('dateOfJoining').value,
+                leaveStart: document.getElementById('leaveStartDate').value,
+                leaveEnd: document.getElementById('leaveEndDate').value,
+                openingBalance: document.getElementById('openingBalance').value,
+                rows: []
+            };
+
+            const rows = document.querySelectorAll('#dataTableBody tr.data-row');
+            rows.forEach(function(row) {
+                const cells = row.querySelectorAll('td');
+                const dateInputs = row.querySelectorAll('.yellow-cell input.strict-date');
+                data.rows.push({
+                    col1: cells[0].textContent.trim(),
+                    col2: cells[1].getAttribute('data-original-date') || cells[1].textContent.trim(),
+                    absent: cells[2].textContent.trim(),
+                    leaveFrom: dateInputs[0] ? dateInputs[0].value : "",
+                    leaveTo: dateInputs[1] ? dateInputs[1].value : ""
+                });
+            });
+
+            // Get current HTML and inject data into the script tag
+            let fullHTML = document.documentElement.outerHTML;
+            const dataString = JSON.stringify(data);
+            const scriptToReplace = 'const PORTABLE_DATA = null;';
+            const newScript = 'const PORTABLE_DATA = ' + dataString + ';';
+            
+            fullHTML = fullHTML.replace(scriptToReplace, newScript);
+            
+            // Add DOCTYPE
+            const finalDoc = '<!DOCTYPE html>\n' + fullHTML;
+            
+            const blob = new Blob([finalDoc], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'earn-leave-calculator.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function syncDateInputState(input) {
+            input.classList.toggle('has-value', Boolean(input.value));
+        }
+
+        function applyCol7Col8RuleForRow(row, showAlert) {
+            if (!row) {
+                return;
+            }
+
+            const rowDateInputs = row.querySelectorAll('.yellow-cell input[type="date"]');
+            if (rowDateInputs.length < 2) {
+                return;
+            }
+
+            const col7Input = rowDateInputs[0];
+            const col8Input = rowDateInputs[1];
+
+            const cells = row.querySelectorAll('td');
+            const col1Text = cells.length > 0 ? cells[0].textContent.trim() : '';
+            const col2Text = cells.length > 1 ? (cells[1].getAttribute('data-original-date') || cells[1].textContent.trim()) : '';
+
+            const col1Date = parseDDMMYYYYDate(col1Text);
+            const col2Date = parseDDMMYYYYDate(col2Text);
+
+            const col1ISO = col1Date ? col1Date.getFullYear() + '-' +
+                String(col1Date.getMonth() + 1).padStart(2, '0') + '-' +
+                String(col1Date.getDate()).padStart(2, '0') : null;
+
+            const col2ISO = col2Date ? col2Date.getFullYear() + '-' +
+                String(col2Date.getMonth() + 1).padStart(2, '0') + '-' +
+                String(col2Date.getDate()).padStart(2, '0') : null;
+
+            col7Input.removeAttribute('min');
+            col7Input.removeAttribute('max');
+            col8Input.removeAttribute('min');
+            col8Input.removeAttribute('max');
+
+            const col7Year = col7Input.value ? parseInt(col7Input.value.split('-')[0], 10) : 0;
+            const col8Year = col8Input.value ? parseInt(col8Input.value.split('-')[0], 10) : 0;
+
+            if (col7Input.value && col7Year < 1000) return;
+            if (col8Input.value && col8Year < 1000) return;
+
+            if (col7Input.value && col1ISO && col7Input.value < col1ISO) {
+                if (showAlert) {
+                    alert('Column 7 ka date, duty period ke starting date (' + col1Text + ') se chhota nahi ho sakta.');
+                    col7Input.value = '';
+                    syncDateInputState(col7Input);
+                }
+                return;
+            }
+
+            if (col7Input.value && col2ISO && col7Input.value > col2ISO) {
+                if (showAlert) {
+                    alert('Column 7 ka date, duty period ke ending date (' + col2Text + ') se bada nahi ho sakta.');
+                    col7Input.value = '';
+                    syncDateInputState(col7Input);
+                }
+                return;
+            }
+
+            if (!col7Input.value && col8Input.value) {
+                if (showAlert) {
+                    alert('Pehle Column 7 ka date select karein.');
+                    col8Input.value = '';
+                    syncDateInputState(col8Input);
+                }
+                return;
+            }
+
+            if (col8Input.value && col2ISO && col8Input.value > col2ISO) {
+                if (showAlert) {
+                    alert('Column 8 ka date, duty period ke ending date (' + col2Text + ') se bada nahi ho sakta.');
+                    col8Input.value = '';
+                    syncDateInputState(col8Input);
+                }
+                return;
+            }
+
+            if (col7Input.value && col8Input.value && col8Input.value < col7Input.value) {
+                if (showAlert) {
+                    alert('Column 8 ka date, Column 7 ke date se chhota nahi ho sakta.');
+                    col8Input.value = '';
+                    syncDateInputState(col8Input);
+                }
+            }
+        }
+
+        function applyCol7Col8RuleForInput(input, showAlert) {
+            applyCol7Col8RuleForRow(input.closest('tr'), showAlert);
+        }
+
+        const EFFECTIVE_BOUNDARIES = [
+            new Date(1984, 6, 19),
+            new Date(1986, 11, 1),
+            new Date(2005, 3, 1)
+        ];
+
+        function getDOJThreeYearDate() {
+            const dojInput = document.getElementById('dateOfJoining');
+            if (!dojInput || !dojInput.value || dojInput.value.length < 10) return null;
+            const doj = parseDDMMYYYYDate(dojInput.value);
+            if (!doj) return null;
+            const threeYr = new Date(doj);
+            threeYr.setFullYear(threeYr.getFullYear() + 3);
+            // 3rd anniversary is the split point (e.g., 31-08-2022 -> 31-08-2025)
+            // The previous rule period ends on 30-08-2025
+            threeYr.setDate(threeYr.getDate() - 1);
+            return threeYr;
+        }
+
+        function getAllBoundaries() {
+            let boundaries = [];
+            
+            // 1. DOJ 3-year boundary
+            const threeYr = getDOJThreeYearDate();
+            if (threeYr) boundaries.push(threeYr);
+
+            // 2. Historical rules boundaries
+            EFFECTIVE_BOUNDARIES.forEach(b => boundaries.push(b));
+
+            // DYNAMIC: Add user-entered Leave To dates from the table
+            const tbody = document.getElementById('dataTableBody');
+            if (tbody) {
+                const rows = tbody.querySelectorAll('tr.data-row');
+                rows.forEach(row => {
+                    const inputs = row.querySelectorAll('input.strict-date');
+                    if (inputs.length >= 2) {
+                        const col8Val = inputs[1].value;
+                        if (col8Val && col8Val.length === 10) {
+                            const dateObj = parseDDMMYYYYDate(col8Val);
+                            if (dateObj) boundaries.push(dateObj);
+                        }
+                    }
+                });
+            }
+
+            // Remove duplicates and sort
+            return boundaries.filter((date, index, self) => 
+                index === self.findIndex((t) => t.getTime() === date.getTime())
+            ).sort((a, b) => a - b);
+        }
+
+        function toISODate(date) {
+            const y = date.getFullYear();
+            const m = String(date.getMonth() + 1).padStart(2, '0');
+            const d = String(date.getDate()).padStart(2, '0');
+            return y + '-' + m + '-' + d;
+        }
+
+        function splitPeriodByEffectiveDates(startDate, endDate) {
+            if (!startDate || !endDate || endDate < startDate) return [];
+            
+            // Collect all potential split dates (where a period should END)
+            let endPoints = [];
+            
+            // 1. Rule boundaries (these are points where a period must end)
+            const boundaries = getAllBoundaries();
+            boundaries.forEach(b => {
+                if (b >= startDate && b < endDate) {
+                    endPoints.push(b);
+                }
+            });
+
+            // 2. The final end date
+            endPoints.push(endDate);
+
+            // Remove duplicates and sort
+            endPoints = endPoints.filter((date, index, self) => 
+                index === self.findIndex((t) => t.getTime() === date.getTime())
+            ).sort((a, b) => a - b);
+
+            const periods = [];
+            let currentStart = new Date(startDate);
+            
+            for (let endPoint of endPoints) {
+                if (currentStart <= endPoint) {
+                    periods.push({
+                        start: new Date(currentStart),
+                        end: new Date(endPoint)
+                    });
+                    currentStart = new Date(endPoint);
+                    currentStart.setDate(currentStart.getDate() + 1);
+                }
+            }
+            
+            return periods;
+        }
+
+        function createDataRow(col1Date, col2Date) {
+            const tr = document.createElement('tr');
+            tr.className = 'data-row';
+
+            const td1 = document.createElement('td');
+            const dd1 = String(col1Date.getDate()).padStart(2, '0');
+            const mm1 = String(col1Date.getMonth() + 1).padStart(2, '0');
+            td1.textContent = dd1 + '-' + mm1 + '-' + col1Date.getFullYear();
+            tr.appendChild(td1);
+
+            const td2 = document.createElement('td');
+            const dd2 = String(col2Date.getDate()).padStart(2, '0');
+            const mm2 = String(col2Date.getMonth() + 1).padStart(2, '0');
+            const formattedDate2 = dd2 + '-' + mm2 + '-' + col2Date.getFullYear();
+            td2.textContent = formattedDate2;
+            td2.setAttribute('data-original-date', formattedDate2);
+            tr.appendChild(td2);
+
+            const td3 = document.createElement('td');
+            td3.className = 'absent-cell';
+            td3.contentEditable = 'true';
+            tr.appendChild(td3);
+
+            for (let i = 0; i < 3; i++) {
+                tr.appendChild(document.createElement('td'));
+            }
+
+            for (let j = 0; j < 2; j++) {
+                const tdY = document.createElement('td');
+                tdY.className = 'yellow-cell';
+                const container = document.createElement('div');
+                container.className = 'date-input-container';
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.className = 'strict-date';
+                input.placeholder = 'DD-MM-YYYY';
+                input.maxLength = 10;
+                const btn = document.createElement('button');
+                btn.className = 'clear-btn';
+                btn.textContent = '×';
+                btn.setAttribute('onclick', 'clearDate(this)');
+                container.appendChild(input);
+                container.appendChild(btn);
+                tdY.appendChild(container);
+                tr.appendChild(tdY);
+            }
+            tr.appendChild(document.createElement('td'));
+            tr.appendChild(document.createElement('td'));
+
+            return tr;
+        }
+
+        function generateDataRows(externalSavedData) {
+            const leaveStartInput = document.getElementById('leaveStartDate');
+            const leaveEndInput = document.getElementById('leaveEndDate');
+            const tbody = document.getElementById('dataTableBody');
+
+            if (!tbody || !leaveStartInput || !leaveEndInput) {
+                return;
+            }
+
+            // Save focus state
+            const activeEl = document.activeElement;
+            let focusInfo = null;
+            if (activeEl && activeEl.tagName === 'INPUT') {
+                const tr = activeEl.closest('tr.data-row');
+                if (tr) {
+                    const rowIdx = Array.from(tbody.querySelectorAll('tr.data-row')).indexOf(tr);
+                    const inputIdx = Array.from(tr.querySelectorAll('input')).indexOf(activeEl);
+                    focusInfo = { rowIdx, inputIdx, cursorStart: activeEl.selectionStart, cursorEnd: activeEl.selectionEnd };
+                }
+            }
+
+            // Save current state
+            let savedData = externalSavedData || [];
+            if (savedData.length === 0) {
+                const existingRows = tbody.querySelectorAll('tr.data-row');
+                existingRows.forEach(function(row) {
+                    const cells = row.querySelectorAll('td');
+                    const dateInputs = row.querySelectorAll('input');
+                    savedData.push({
+                        col1: cells[0].textContent.trim(),
+                        col2: cells[1].getAttribute('data-original-date') || cells[1].textContent.trim(),
+                        absent: cells[2].textContent.trim(),
+                        leaveFrom: dateInputs[0] ? dateInputs[0].value : "",
+                        leaveTo: dateInputs[1] ? dateInputs[1].value : "",
+                        leaveTaken: cells[8].textContent.trim()
+                    });
+                });
+            }
+
+            const startDate = parseDDMMYYYYDate(leaveStartInput.value);
+            const endDate = parseDDMMYYYYDate(leaveEndInput.value);
+
+            if (!startDate || !endDate || endDate < startDate) {
+                tbody.innerHTML = '';
+                return;
+            }
+
+            const periods = splitPeriodByEffectiveDates(startDate, endDate);
+            tbody.innerHTML = '';
+
+            periods.forEach(function(period) {
+                const row = createDataRow(period.start, period.end);
+                
+                // Restoration logic: Only restore leave if it fits within the NEW period boundaries
+                let match = null;
+                for (let i = 0; i < savedData.length; i++) {
+                    const d = savedData[i];
+                    const dStart = parseDDMMYYYYDate(d.col1);
+                    const dEnd = parseDDMMYYYYDate(d.col2);
+                    
+                    // Basic match: period is within old row
+                    if (dStart && dEnd && period.start >= dStart && period.end <= dEnd) {
+                        const lFrom = parseDDMMYYYYDate(d.leaveFrom);
+                        const lTo = parseDDMMYYYYDate(d.leaveTo);
+                        
+                        const cells = row.querySelectorAll('td');
+                        const inputs = row.querySelectorAll('input.strict-date');
+                        
+                        // Restore leave only if the leave period falls within this specific split period
+                        if (lFrom && lTo && lFrom >= period.start && lTo <= period.end) {
+                            if (inputs.length >= 2) {
+                                inputs[0].value = d.leaveFrom;
+                                inputs[1].value = d.leaveTo;
+                            }
+                            cells[8].textContent = d.leaveTaken;
+                        }
+                        
+                        // Always restore absent days if they match the row
+                        cells[2].textContent = d.absent;
+                        break;
+                    }
+                }
+
+                tbody.appendChild(row);
+            });
+
+            initYellowDateCells();  // Only syncs visual state, no listeners added
+            recalculateFormulaColumns();
+
+            // Restore focus
+            if (focusInfo && focusInfo.rowIdx !== -1) {
+                const newRows = tbody.querySelectorAll('tr.data-row');
+                if (newRows[focusInfo.rowIdx]) {
+                    const nextInput = newRows[focusInfo.rowIdx].querySelectorAll('input')[focusInfo.inputIdx];
+                    if (nextInput) {
+                        nextInput.focus();
+                        try { nextInput.setSelectionRange(focusInfo.cursorStart, focusInfo.cursorEnd); } catch(e) {}
+                    }
+                }
+            }
+        }
+
+        function recalculateFirstRowDutyPeriod() {
+            generateDataRows();
+        }
+
+        function clearAllData() {
+            if (!confirm('क्या आप सभी डेटा मिटाना चाहते हैं? (Clear all data?)')) return;
+
+            // Clear header text inputs
+            document.querySelectorAll('input[type="text"]').forEach(function(inp) { inp.value = ''; });
+
+            // Clear header date inputs
+            ['dob', 'dateOfJoining', 'leaveStartDate', 'leaveEndDate'].forEach(function(id) {
+                var inp = document.getElementById(id);
+                if (inp) inp.value = '';
+            });
+
+            // Clear balance
+            var balanceInput = document.getElementById('openingBalance');
+            if (balanceInput) balanceInput.value = '';
+
+            // Clear table
+            var tbody = document.getElementById('dataTableBody');
+            if (tbody) tbody.innerHTML = '';
+
+            // Save empty state to localStorage (don't just remove — 
+            // otherwise hardcoded HTML defaults will reload on refresh)
+            var emptyState = {
+                name: '',
+                designation: '',
+                dob: '',
+                doj: '',
+                leaveStart: '',
+                leaveEnd: '',
+                openingBalance: '',
+                rows: []
+            };
+            localStorage.setItem('leaveCalculatorData', JSON.stringify(emptyState));
+        }
+
+        function clearTextInput(button) {
+            const container = button.parentElement;
+            const input = container.querySelector('input');
+            if (!input) return;
+            input.value = '';
+            if (input.id === 'openingBalance') {
+                recalculateFormulaColumns();
+            }
+            saveToLocalStorage();
+        }
+
+        function clearMainDate(inputId) {
+            const input = document.getElementById(inputId);
+            if (!input) return;
+            input.value = '';
+            if (inputId === 'dateOfJoining') {
+                if (!leaveStartManuallyChanged) {
+                    const leaveStartInput = document.getElementById('leaveStartDate');
+                    if (leaveStartInput) leaveStartInput.value = '';
+                }
+                generateDataRows();
+            } else if (inputId === 'leaveStartDate' || inputId === 'leaveEndDate') {
+                generateDataRows();
+            }
+        }
+
+        function clearDate(button) {
+            const container = button.parentElement;
+            const input = container.querySelector('.strict-date');
+            input.value = '';
+            syncDateInputState(input);
+            applyCol7Col8RuleForInput(input, false);
+            recalculateFormulaColumns();
+        }
+
+        function initYellowDateCells() {
+            // Only sync visual state for existing inputs; NO event listeners added here.
+            // Listeners are handled once via event delegation in setupTableDelegation().
+            const dateInputs = document.querySelectorAll('.yellow-cell input.strict-date');
+            dateInputs.forEach(function(input) {
+                syncDateInputState(input);
+                applyCol7Col8RuleForInput(input, false);
+            });
+        }
+
+        let leaveStartManuallyChanged = false;
+
+        function initLeavePeriodListeners() {
+            const leaveStartInput = document.getElementById('leaveStartDate');
+            const leaveEndInput = document.getElementById('leaveEndDate');
+            const dateOfJoiningInput = document.getElementById('dateOfJoining');
+
+            if (leaveStartInput && dateOfJoiningInput) {
+                // On page load: auto-fill leave dates if not set
+                if (!leaveStartInput.value && dateOfJoiningInput.value) {
+                    leaveStartInput.value = dateOfJoiningInput.value;
+                }
+                if (!leaveEndInput.value && dateOfJoiningInput.value) {
+                    // Set Leave End to today's date
+                    var today = new Date();
+                    var yyyy = today.getFullYear();
+                    var mm = String(today.getMonth() + 1).padStart(2, '0');
+                    var dd = String(today.getDate()).padStart(2, '0');
+                    leaveEndInput.value = dd + '-' + mm + '-' + yyyy;
+                }
+
+                // Force table to match Leave From on init
+                recalculateFirstRowDutyPeriod();
+                calculateThreeYearRange();
+
+                // Masking is now handled by a global listener below
+
+
+                leaveStartInput.addEventListener('input', function() {
+                    window.leaveStartManuallyChanged = true;
+                    // Table update is handled by global listener
+                });
+
+                leaveStartInput.addEventListener('change', function() {
+                    const jumped = focusNextDateInput(this);
+                    
+                    var parts = this.value.split('-');
+                    var yearPart = (parts.length === 3) ? parseInt(parts[2], 10) : 0;
+                    if (yearPart < 1000) return;
+
+                    // Agar leaveEndDate empty hai to aaj ki date set karo
+                    if (!leaveEndInput.value) {
+                        var today = new Date();
+                        var dd = String(today.getDate()).padStart(2, '0');
+                        var mm = String(today.getMonth() + 1).padStart(2, '0');
+                        leaveEndInput.value = dd + '-' + mm + '-' + today.getFullYear();
+                    }
+
+                    // Only perform alert validation if we just finished typing a new year (detected by focusNextDateInput)
+                    if (jumped) {
+                        const leaveStartObj = parseDDMMYYYYDate(this.value);
+                        const dojObj = parseDDMMYYYYDate(dateOfJoiningInput.value);
+                        if (leaveStartObj && dojObj && leaveStartObj < dojObj) {
+                            const dojMsg = dateOfJoiningInput.value;
+                            setTimeout(() => {
+                                alert('Leave Period का Start Date, Date of Joining (' + dojMsg + ') से पहले नहीं हो सकता।');
+                                this.value = dateOfJoiningInput.value;
+                                recalculateFirstRowDutyPeriod();
+                                saveToLocalStorage();
+                            }, 10);
+                        }
+                    }
+                    
+                    leaveStartManuallyChanged = true;
+                    recalculateFirstRowDutyPeriod();
+                    saveToLocalStorage();
+                });
+
+                leaveStartInput.addEventListener('blur', function() {
+                    window.leaveStartManuallyChanged = true;
+                    // Final check when user leaves the field
+                    const leaveStartObj = parseDDMMYYYYDate(this.value);
+                    const dojObj = parseDDMMYYYYDate(dateOfJoiningInput.value);
+                    if (leaveStartObj && dojObj && leaveStartObj < dojObj) {
+                        alert('Leave Period का Start Date, Date of Joining (' + dateOfJoiningInput.value + ') से पहले नहीं हो सकता।');
+                        this.value = dateOfJoiningInput.value;
+                    }
+                    recalculateFirstRowDutyPeriod();
+                    saveToLocalStorage();
+                });
+
+                // Redundant listener removed for consolidation
+
+            }
+
+            if (leaveEndInput) {
+                leaveEndInput.addEventListener('change', function() {
+                    focusNextDateInput(this);
+                    recalculateFirstRowDutyPeriod();
+                    saveToLocalStorage();
+                });
+            }
+
+            const openingBalanceInput = document.getElementById('openingBalance');
+            if (openingBalanceInput) {
+                openingBalanceInput.addEventListener('input', function() {
+                    recalculateFormulaColumns();
+                    saveToLocalStorage();
+                });
+            }
+
+            // Also save on Name and Designation changes
+        // Unified Global Input Listener
+        document.addEventListener('input', function(e) {
+            const input = e.target;
+            if (!input) return;
+
+            // 1. Apply Date Masking
+            if (input.classList.contains('strict-date')) {
+                applyStrictDateMask(input, e);
+            }
+
+            // 2. Auto-Save for all text/number inputs
+            if (input.tagName === 'INPUT' && (input.type === 'text' || input.type === 'number')) {
+                saveToLocalStorage();
+            }
+        }, true);
+
+        // *** KEYDOWN: Track whether year was incomplete BEFORE keypress ***
+        document.addEventListener('keydown', function(e) {
+            var input = e.target;
+            if (!input || !input.classList.contains('strict-date')) return;
+            if (e.key < '0' || e.key > '9') return;
+
+            var parts = (input.value || '').split('-');
+            var yr = (parts.length === 3) ? parseInt(parts[2], 10) : 0;
+
+            // _kd_yearWasIncomplete = true tabhi jab year abhi < 1000 hai
+            // (matlab ya to field empty thi ya year abhi type ho raha tha)
+            input._kd_yearWasIncomplete = (yr < 1000);
+        }, true);
+
+        // *** KEYUP: Sirf tab jump karo jab year incomplete tha aur ab complete hua ***
+        document.addEventListener('keyup', function(e) {
+            var input = e.target;
+            if (!input || !input.classList.contains('strict-date')) return;
+            if (e.key < '0' || e.key > '9') return;
+
+            // Agar keydown ne mark nahi kiya to skip
+            if (!input._kd_yearWasIncomplete) return;
+
+            var parts = (input.value || '').split('-');
+            if (parts.length < 3) return;
+            var yearNowStr = parts[2] || '';
+
+            // Sirf tab aage badho jab year ke pure 4 digits type ho jaye
+            if (yearNowStr.length < 4) return;
+            var yearNow = parseInt(yearNowStr, 10);
+            if (isNaN(yearNow) || yearNow < 1000) return;
+
+            // Year just completed!
+            input._kd_yearWasIncomplete = false;
+
+            var dojInput = document.getElementById('dateOfJoining');
+            var currDateObj = parseDDMMYYYYDate(input.value);
+            var dojDateObj = dojInput ? parseDDMMYYYYDate(dojInput.value) : null;
+
+            if (input.id === 'dateOfJoining') {
+                calculateThreeYearRange();
+                const leaveStartInput = document.getElementById('leaveStartDate');
+                if (leaveStartInput && !window.leaveStartManuallyChanged) {
+                    leaveStartInput.value = input.value;
+                    syncDateInputState(leaveStartInput);
+                    recalculateFirstRowDutyPeriod();
+                }
+                generateDataRows();
+                saveToLocalStorage();
+            } else if (input.id === 'leaveStartDate' && dojDateObj && currDateObj && currDateObj < dojDateObj) {
+                input.value = dojInput.value;
+                recalculateFirstRowDutyPeriod();
+                saveToLocalStorage();
+                alert('Leave Period \u0915\u093e Start Date, Date of Joining (' + dojInput.value + ') \u0938\u0947 \u092a\u0939\u0932\u0947 \u0928\u0939\u0940\u0902 \u0939\u094b \u0938\u0915\u0924\u093e\u0964');
+            } else {
+                var allInputs = Array.from(document.querySelectorAll('.strict-date'));
+                var idx = allInputs.indexOf(input);
+                if (idx >= 0 && idx < allInputs.length - 1) {
+                    setTimeout(function() { allInputs[idx + 1].focus(); }, 50);
+                }
+            }
+        }, true);
+
+
+        function focusNextDateInput(currentInput) {
+            // Legacy no-op — jumping is now handled by the keyup listener above
+            return false;
+        }
+
+
+
+        function calculateThreeYearRange() {
+            const dojInput = document.getElementById('dateOfJoining');
+            const rangeCell = document.getElementById('threeYearRange');
+            if (!dojInput || !rangeCell) return;
+            
+            if (dojInput.value) {
+                const parts = dojInput.value.split('-');
+                if (parts.length === 3) {
+                    const start = new Date(parts[2], parts[1] - 1, parts[0]);
+                    const end = new Date(parts[2], parts[1] - 1, parts[0]);
+                    end.setFullYear(end.getFullYear() + 3);
+                    end.setDate(end.getDate() - 1);
+                    
+                    const startStr = String(start.getDate()).padStart(2, '0') + '-' + String(start.getMonth() + 1).padStart(2, '0') + '-' + start.getFullYear();
+                    const endStr = String(end.getDate()).padStart(2, '0') + '-' + String(end.getMonth() + 1).padStart(2, '0') + '-' + end.getFullYear();
+                    
+                    rangeCell.textContent = startStr + ' TO ' + endStr;
+                    return;
+                }
+            }
+            rangeCell.textContent = '';
+        }
+
+        function setupTableDelegation() {
+            const tbody = document.getElementById('dataTableBody');
+            if (!tbody) return;
+
+            // --- Yellow date cell: change event (delegated) ---
+            tbody.addEventListener('change', function(e) {
+                const input = e.target;
+                if (!input.classList.contains('strict-date') || !input.closest('.yellow-cell')) return;
+
+                if (input.value) {
+                    var parts = input.value.split('-');
+                    var yp = (parts.length === 3) ? parseInt(parts[2], 10) : 0;
+                    if (yp < 1000) return;
+                }
+
+                syncDateInputState(input);
+                applyCol7Col8RuleForInput(input, true);
+
+                // Determine if year was just completed (transition from <1000 to >=1000)
+                var partsNow = (input.value || '').split('-');
+                var yearPart = (partsNow.length === 3) ? parseInt(partsNow[2], 10) : 0;
+                var prevYearPart = input._prevYearPart !== undefined ? input._prevYearPart : 0;
+                var yearCompleted = (yearPart >= 1000 && prevYearPart < 1000);
+
+                // Update _prevYearPart for the future
+                input._prevYearPart = yearPart;
+
+                const tr = input.closest('tr');
+                if (!tr) return;
+                const isCol8 = input.closest('td') === tr.querySelectorAll('.yellow-cell')[1];
+                const isCol7 = input.closest('td') === tr.querySelectorAll('.yellow-cell')[0];
+
+                if (isCol8 && input.value.length === 10) {
+                    // Rebuild table to incorporate new leave boundary
+                    const allRows = Array.from(tbody.querySelectorAll('tr.data-row'));
+                    const rowIndex = allRows.indexOf(tr);
+
+                    saveToLocalStorage();
+                    const updatedData = loadFromLocalStorage();
+                    generateDataRows(updatedData);
+
+                    // If it was a transition (yearCompleted), move focus to next row
+                    if (yearCompleted) {
+                        setTimeout(function() {
+                            var newRows = tbody.querySelectorAll('tr.data-row');
+                            var targetRowIdx = rowIndex + 1;
+                            if (targetRowIdx < newRows.length) {
+                                var nextCol7 = newRows[targetRowIdx].querySelector('.yellow-cell input.strict-date');
+                                if (nextCol7) nextCol7.focus();
+                            }
+                        }, 100);
+                    }
+                } else if (isCol8 && input.value) {
+                    // Still typing or incomplete date
+                    saveToLocalStorage();
+                }
+
+
+                    // --- RULE: Col 7 & 8 boundary check (3-year rule) ---
+                    const threeYrDate = getDOJThreeYearDate();
+                    const rowStartVal = tr.querySelectorAll('td')[0].textContent.trim();
+                    const rowStartObj = parseDDMMYYYYDate(rowStartVal);
+
+                    if (threeYrDate && rowStartObj && rowStartObj <= threeYrDate) {
+                        const inputDateObj = parseDDMMYYYYDate(input.value);
+                        if (inputDateObj && inputDateObj > threeYrDate) {
+                            const boundaryStr = String(threeYrDate.getDate()).padStart(2, '0') + '-' + 
+                                              String(threeYrDate.getMonth()+1).padStart(2, '0') + '-' + 
+                                              threeYrDate.getFullYear();
+                            alert("सावधान! यह रो 3 साल के अंदर की है। छुट्टी की तारीख " + boundaryStr + " तक ही हो सकती है।");
+                            input.value = '';
+                            syncDateInputState(input);
+                            return;
+                        }
+                    }
+                } else {
+                    if (isCol7 && input.value.length === 10) {
+                        // --- RULE: Col 7 & 8 boundary check (3-year rule) ---
+                        const threeYrDate = getDOJThreeYearDate();
+                        const rowStartVal = tr.querySelectorAll('td')[0].textContent.trim();
+                        const rowStartObj = parseDDMMYYYYDate(rowStartVal);
+
+                        if (threeYrDate && rowStartObj && rowStartObj <= threeYrDate) {
+                            const inputDateObj = parseDDMMYYYYDate(input.value);
+                            if (inputDateObj && inputDateObj > threeYrDate) {
+                                const boundaryStr = String(threeYrDate.getDate()).padStart(2, '0') + '-' + 
+                                                  String(threeYrDate.getMonth()+1).padStart(2, '0') + '-' + 
+                                                  threeYrDate.getFullYear();
+                                alert("सावधान! यह रो 3 साल के अंदर की है। छुट्टी की तारीख " + boundaryStr + " तक ही हो सकती है।");
+                                input.value = '';
+                                syncDateInputState(input);
+                                return;
+                            }
+                        }
+
+                        const col1Date = parseDDMMYYYYDate(tr.querySelectorAll('td')[0].textContent.trim());
+                        const col7Date = parseDDMMYYYYDate(input.value);
+                        
+                        if (col1Date && col7Date && col7Date <= col1Date) {
+                            alert('LEAVE FROM (Col 7) की तारीख हमेशा DUTY FROM (Col 1) से अधिक होनी चाहिए।');
+                            input.value = '';
+                            recalculateFormulaColumns();
+                            return;
+                        }
+
+                        const col2Cell = tr.querySelectorAll('td')[1];
+                        if (input.value) {
+                            const prevDate = getPreviousDateDDMMYYYY(input.value);
+                            if (prevDate) {
+                                col2Cell.textContent = prevDate;
+                            }
+                        } else {
+                            col2Cell.textContent = col2Cell.getAttribute('data-original-date') || col2Cell.textContent;
+                        }
+                    }
+
+                    if (isCol8 && input.value.length === 10) {
+                        // Rebuild table to incorporate new leave boundary
+                        generateDataRows();
+                    }
+                    
+                    recalculateFormulaColumns();
+                    
+                    // Auto-focus next date input (Col7 -> Col8)
+                    if (yearCompleted) {
+                        var allDateInputs = Array.from(document.querySelectorAll('input[type="date"]'));
+                        var currentIndex = allDateInputs.indexOf(input);
+                        if (currentIndex >= 0 && currentIndex < allDateInputs.length - 1) {
+                            var nextInput = allDateInputs[currentIndex + 1];
+                            setTimeout(function() { nextInput.focus(); }, 50);
+                        }
+                    }
+                    saveToLocalStorage();
+                }
+            });
+
+            // --- Yellow date cell: blur event (delegated) ---
+            tbody.addEventListener('blur', function(e) {
+                const input = e.target;
+                if (!input.classList.contains('strict-date') || !input.closest('.yellow-cell')) return;
+                
+                const tr = input.closest('tr');
+                if (!tr) return; 
+
+                const isCol8 = input.closest('td') === tr.querySelectorAll('.yellow-cell')[1];
+                
+                if (isCol8) {
+                    let targetRowIndex = -1;
+                    let targetIsCol7 = false;
+                    let targetIsCol8 = false;
+                    let targetIsAbsent = false;
+
+                    if (e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest('tr.data-row')) {
+                        const allRows = Array.from(tbody.querySelectorAll('tr.data-row'));
+                        targetRowIndex = allRows.indexOf(e.relatedTarget.closest('tr'));
+                        targetIsCol7 = e.relatedTarget.closest('td') === e.relatedTarget.closest('tr').querySelectorAll('.yellow-cell')[0];
+                        targetIsCol8 = e.relatedTarget.closest('td') === e.relatedTarget.closest('tr').querySelectorAll('.yellow-cell')[1];
+                        targetIsAbsent = e.relatedTarget.classList.contains('absent-cell');
+                    }
+
+                    const updatedData = loadFromLocalStorage();
+                    generateDataRows(updatedData);
+
+                    if (targetRowIndex !== -1) {
+                        setTimeout(function() {
+                            var newRows = tbody.querySelectorAll('tr.data-row');
+                            if (targetRowIndex < newRows.length) {
+                                if (targetIsCol7) {
+                                    var nextCol7 = newRows[targetRowIndex].querySelector('.yellow-cell input.strict-date');
+                                    if (nextCol7) nextCol7.focus();
+                                } else if (targetIsCol8) {
+                                    var nextCol8 = newRows[targetRowIndex].querySelectorAll('.yellow-cell input.strict-date')[1];
+                                    if (nextCol8) nextCol8.focus();
+                                } else if (targetIsAbsent) {
+                                    var absCell = newRows[targetRowIndex].querySelector('.absent-cell');
+                                    if (absCell) absCell.focus();
+                                }
+                            }
+                        }, 50);
+                    }
+                }
+            }, true);
+
+            // --- Absent cell: input & blur events (delegated) ---
+            tbody.addEventListener('input', function(e) {
+                const cell = e.target;
+                if (!cell.classList.contains('absent-cell')) return;
+                cell.textContent = cell.textContent.replace(/[^0-9]/g, '');
+                recalculateFormulaColumns();
+            });
+
+            tbody.addEventListener('blur', function(e) {
+                const cell = e.target;
+                if (!cell.classList.contains('absent-cell')) return;
+                cell.textContent = cell.textContent.replace(/[^0-9]/g, '');
+                recalculateFormulaColumns();
+            }, true);
+        }
+
+        window.onload = function() {
+            const leaveEndInput = document.getElementById('leaveEndDate');
+            
+            // 1. Try to load from LocalStorage (Current session/device)
+            let savedRows = loadFromLocalStorage();
+            
+            // 2. If no LocalStorage, try to load from baked-in PORTABLE_DATA (Other devices)
+            if (!savedRows && typeof PORTABLE_DATA !== 'undefined' && PORTABLE_DATA !== null) {
+                const data = PORTABLE_DATA;
+                const textInputs = document.querySelectorAll('input[type="text"]');
+                if (data.name !== undefined && textInputs[0]) textInputs[0].value = data.name;
+                if (data.designation !== undefined && textInputs[1]) textInputs[1].value = data.designation;
+                if (data.dob !== undefined) document.getElementById('dob').value = data.dob;
+                if (data.doj !== undefined) document.getElementById('dateOfJoining').value = data.doj;
+                if (data.leaveStart !== undefined) document.getElementById('leaveStartDate').value = data.leaveStart;
+                if (data.leaveEnd !== undefined) document.getElementById('leaveEndDate').value = data.leaveEnd;
+                if (data.openingBalance !== undefined) document.getElementById('openingBalance').value = data.openingBalance;
+                savedRows = data.rows;
+            }
+            
+            if (leaveEndInput && !leaveEndInput.value) {
+                leaveEndInput.value = toISODate(new Date());
+            }
+            
+            setupTableDelegation();   // Set up ONCE — event delegation, no duplicates
+            initLeavePeriodListeners();
+            
+            // Generate rows with loaded data (initYellowDateCells called inside)
+            generateDataRows(savedRows);
+            calculateThreeYearRange();
+        };
+
+        function downloadPDF() {
+            const btn = document.querySelector('.pdf-download-btn');
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg> &nbsp;Generating...';
+            btn.disabled = true;
+
+            setTimeout(function () {
+                try {
+                    const { jsPDF } = window.jspdf;
+                    const doc = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' });
+
+                    const pageW = 297;
+                    const margin = 10;
+                    const contentW = pageW - 2 * margin;
+                    const yellowFill = [255, 240, 160];
+                    const whiteFill = [255, 255, 255];
+                    const blueFill = [173, 216, 230];
+
+                    function fmtDate(inputId) {
+                        const el = document.getElementById(inputId);
+                        if (!el || !el.value) return '';
+                        const p = el.value.split('-');
+                        return p[2] + '-' + p[1] + '-' + p[0];
+                    }
+
+                    function fmtInputDate(input) {
+                        if (!input || !input.value) return '';
+                        const p = input.value.split('-');
+                        return p[2] + '-' + p[1] + '-' + p[0];
+                    }
+
+                    const nameInputs = document.querySelectorAll('input[type="text"]');
+                    const name = nameInputs[0] ? nameInputs[0].value : '';
+                    const designation = nameInputs[1] ? nameInputs[1].value : '';
+                    const dob = fmtDate('dob');
+                    const doj = fmtDate('dateOfJoining');
+                    const leaveStart = fmtDate('leaveStartDate');
+                    const leaveEnd = fmtDate('leaveEndDate');
+                    const openingBalance = (document.getElementById('openingBalance') || {}).value || '0';
+
+                    let y = margin;
+
+                    // HEADER
+                    doc.setFillColor(192, 192, 192);
+                    doc.setDrawColor(0);
+                    doc.setLineWidth(0.4);
+                    doc.rect(margin, y, contentW, 10, 'FD');
+                    doc.setFontSize(13);
+                    doc.setFont('helvetica', 'bold');
+                    doc.setTextColor(0, 0, 0);
+                    doc.text('UNUTILIZED EARN LEAVE CALCULATOR', pageW / 2, y + 7, { align: 'center' });
+                    y += 11;
+
+                    const baseStyle = {
+                        font: 'helvetica', fontSize: 9,
+                        cellPadding: { top: 2, bottom: 2, left: 3, right: 3 },
+                        lineColor: [0, 0, 0], lineWidth: 0.3,
+                        textColor: [0, 0, 0], valign: 'middle',
+                    };
+
+                    // INFO TABLE
+                    doc.autoTable({
+                        startY: y,
+                        margin: { left: margin, right: margin },
+                        theme: 'grid',
+                        tableWidth: contentW,
+                        styles: baseStyle,
+                        columnStyles: {
+                            0: { cellWidth: 22, fontStyle: 'bold', fillColor: whiteFill },
+                            1: { fontStyle: 'bold', fillColor: yellowFill },
+                            2: { cellWidth: 18, fontStyle: 'bold', fillColor: whiteFill },
+                            3: { cellWidth: 28, fontStyle: 'bold', fillColor: yellowFill },
+                            4: { cellWidth: 18, fontStyle: 'bold', fillColor: whiteFill },
+                            5: { cellWidth: 28, fontStyle: 'bold', fillColor: yellowFill },
+                            6: { cellWidth: 22, fontStyle: 'bold', fillColor: whiteFill },
+                            7: { fontStyle: 'bold', fillColor: yellowFill },
+                        },
+                        body: [
+                            ['NAME', name, 'D.O.B', dob, 'D.O.J', doj, '3 YRS COMP', (document.getElementById('threeYearRange') ? document.getElementById('threeYearRange').textContent : '')],
+                            ['DESIGNATION', designation, 'LEAVE FROM', leaveStart, 'TO', leaveEnd, 'BALANCE EL', openingBalance],
+                        ],
+                    });
+
+                    y = doc.lastAutoTable.finalY + 2;
+
+                    // DATA ROWS
+                    const rows = document.querySelectorAll('#dataTableBody tr.data-row');
+                    const tableData = [];
+
+                    rows.forEach(function (row) {
+                        const cells = row.querySelectorAll('td');
+                        if (cells.length < 10) return;
+                        const dateInputs = row.querySelectorAll('.yellow-cell input.strict-date');
+                        const col6Raw = (cells[5].innerText || cells[5].textContent).replace(/\s+/g, ' ').trim();
+                        tableData.push([
+                            cells[0].textContent.trim(),
+                            cells[1].textContent.trim(),
+                            cells[2].textContent.trim(),
+                            cells[3].textContent.trim(),
+                            cells[4].textContent.trim(),
+                            col6Raw,
+                            fmtInputDate(dateInputs[0]),
+                            fmtInputDate(dateInputs[1]),
+                            cells[8].textContent.trim(),
+                            cells[9].textContent.trim(),
+                        ]);
+                    });
+
+                    // DETAIL TABLE
+                    doc.autoTable({
+                        startY: y,
+                        margin: { left: margin, right: margin },
+                        theme: 'grid',
+                        tableWidth: contentW,
+                        styles: {
+                            font: 'helvetica', fontSize: 7.5,
+                            cellPadding: { top: 2, bottom: 2, left: 2, right: 2 },
+                            lineColor: [0, 0, 0], lineWidth: 0.3,
+                            halign: 'center', valign: 'middle', textColor: [0, 0, 0],
+                        },
+                        columnStyles: {
+                            0: { cellWidth: 22 }, 1: { cellWidth: 22 }, 2: { cellWidth: 14 },
+                            3: { cellWidth: 26 }, 4: { cellWidth: 14 }, 5: { cellWidth: 18 },
+                            6: { cellWidth: 22 }, 7: { cellWidth: 22 }, 8: { cellWidth: 18 },
+                            9: { cellWidth: 'auto' },
+                        },
+                        head: [
+                            [
+                                { content: 'DUTY PERIOD', colSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
+                                { content: 'ABSENT\n(IN DAYS)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
+                                { content: 'TOTAL NO. OF\nDAYS', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
+                                { content: 'LEAVE\nEARNED\n(IN DAYS)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
+                                { content: 'EARNED\nLEAVE AT\nCREDIT\n(10+5)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
+                                { content: 'UNUTILIZED LEAVE TAKEN PERIOD', colSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
+                                { content: 'NO. OF DAYS\nUNUTILIZED\nLEAVE TAKEN', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
+                                { content: 'BALANCE OF\nUNUTILIZED EARN\nLEAVE ON RETURN\nFROM LEAVE TAKEN\n(6-9)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
+                            ],
+                            [
+                                { content: 'FROM', styles: { fillColor: blueFill, fontStyle: 'bold' } },
+                                { content: 'TO', styles: { fillColor: blueFill, fontStyle: 'bold' } },
+                                { content: 'FROM', styles: { fillColor: blueFill, fontStyle: 'bold' } },
+                                { content: 'TO', styles: { fillColor: blueFill, fontStyle: 'bold' } },
+                            ],
+                            ['1','2','3','4','5','6','7','8','9','10'].map(function(n){
+                                return { content: n, styles: { fillColor: blueFill, fontStyle: 'bold' } };
+                            }),
+                        ],
+                        body: tableData.map(function (row) {
+                            return row.map(function (cell, idx) {
+                                const neg = typeof cell === 'string' && cell.startsWith('-');
+                                return {
+                                    content: cell,
+                                    styles: {
+                                        textColor: neg ? [200, 0, 0] : [0, 0, 0],
+                                        fillColor: (idx === 6 || idx === 7) ? yellowFill : whiteFill,
+                                        fontStyle: 'bold',
+                                    },
+                                };
+                            });
+                        }),
+                    });
+
+                    doc.save('earn-leave-calculator.pdf');
+                } catch (err) {
+                    alert('PDF generation failed: ' + err.message);
+                } finally {
+                    btn.innerHTML = originalHTML;
+                    btn.disabled = false;
+                }
+            }, 100);
+        }
+
+        function printPage() {
+            window.print();
+        }
+
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey && e.key === 'p') {
+                e.preventDefault();
+                printPage();
+            }
+        });
+    </script>
+
+
+</body></html>

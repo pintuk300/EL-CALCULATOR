@@ -1,0 +1,68 @@
+/* Action Buttons Styles */
+
+.btn-base {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 10px 22px;
+    font-size: 15px;
+    font-weight: bold;
+    font-family: inherit;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+    letter-spacing: 0.3px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+}
+
+.btn-base:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+.btn-base:active {
+    transform: translateY(0);
+}
+
+.btn-save {
+    background: linear-gradient(135deg, #0f4d19, #1b7a2d);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.btn-clear {
+    background: linear-gradient(135deg, #c0392b, #e74c3c);
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
+}
+
+.btn-print {
+    background: linear-gradient(135deg, #2980b9, #3498db);
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+}
+
+.btn-pdf {
+    background: linear-gradient(135deg, #8e2de2, #4a00e0);
+    box-shadow: 0 4px 15px rgba(74, 0, 224, 0.3);
+}
+
+.clear-icon-btn {
+    background: transparent;
+    color: #666;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 2px;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.clear-icon-btn:hover {
+    color: #000;
+}
