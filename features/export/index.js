@@ -49,13 +49,13 @@ export function downloadPDF(docData) {
         styles: baseStyle,
         columnStyles: {
             0: { cellWidth: 20, fontStyle: 'bold', fillColor: whiteFill },
-            1: { cellWidth: 60, fontStyle: 'bold', fillColor: yellowFill }, // Increased Name/Designation width
-            2: { cellWidth: 15, fontStyle: 'bold', fillColor: whiteFill },
-            3: { cellWidth: 25, fontStyle: 'bold', fillColor: yellowFill },
-            4: { cellWidth: 15, fontStyle: 'bold', fillColor: whiteFill },
-            5: { cellWidth: 25, fontStyle: 'bold', fillColor: yellowFill },
+            1: { cellWidth: 70, fontStyle: 'bold', fillColor: yellowFill }, // Name/Designation
+            2: { cellWidth: 20, fontStyle: 'bold', fillColor: whiteFill },
+            3: { cellWidth: 40, fontStyle: 'bold', fillColor: yellowFill }, // DOB/Leave From (Increased)
+            4: { cellWidth: 20, fontStyle: 'bold', fillColor: whiteFill },
+            5: { cellWidth: 40, fontStyle: 'bold', fillColor: yellowFill }, // DOJ/To (Increased)
             6: { cellWidth: 25, fontStyle: 'bold', fillColor: whiteFill },
-            7: { cellWidth: 92, fontStyle: 'bold', fillColor: yellowFill }, // Balance/Range width
+            7: { cellWidth: 42, fontStyle: 'bold', fillColor: yellowFill }, // 3 YRS COMP/Balance (Narrowed to fit)
         },
         body: [
             ['NAME', docData.user.name, 'D.O.B', docData.user.dob, 'D.O.J', docData.user.doj, '3 YRS COMP', docData.user.threeYrComp],
