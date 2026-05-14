@@ -74,42 +74,32 @@ export function setupMaskedDateInput(inputElement, onComplete) {
 
     inputElement.addEventListener('input', (e) => {
         applyStrictDateMask(inputElement);
-        if (inputElement.value.length === 10 && onComplete) {
-            onComplete(inputElement.value);
+        if (inputElement.value.length === 10) {
+            // Year complete logic (last 4 digits)
+            const parts = inputElement.value.split('-');
+            if (parts.length === 3 && parts[2].length === 4) {
+                // Potential jump
+                setTimeout(() => {
+                    const currentInput = document.activeElement && document.activeElement.tagName === 'INPUT' ? document.activeElement : inputElement;
+                    const allInputs = Array.from(document.querySelectorAll('input, [contenteditable="true"]'))
+                        .filter(el => !el.disabled && el.offsetParent !== null && !el.classList.contains('clear-icon-btn'));
+                    const index = allInputs.indexOf(currentInput);
+                    if (index > -1 && allInputs[index + 1]) {
+                        allInputs[index + 1].focus();
+                        if (allInputs[index + 1].select) allInputs[index + 1].select();
+                    }
+                }, 10); // Very short delay
+            }
+            if (onComplete) onComplete(inputElement.value);
         }
     });
 
-    // Auto-focus logic
+    // Auto-focus logic state
     inputElement.addEventListener('keydown', function(e) {
         if (e.key >= '0' && e.key <= '9') {
             const parts = (this.value || '').split('-');
-            const yr = (parts.length === 3) ? parseInt(parts[2], 10) : 0;
-            this._kd_yearWasIncomplete = (yr < 1000);
-        }
-    });
-
-    inputElement.addEventListener('keyup', function(e) {
-        if (e.key >= '0' && e.key <= '9' && this._kd_yearWasIncomplete) {
-            const parts = (this.value || '').split('-');
-            if (parts.length === 3 && parts[2].length === 4) {
-                const year = parseInt(parts[2], 10);
-                if (year >= 1000) {
-                    this._kd_yearWasIncomplete = false;
-                    // Auto-jump to next focusable input
-                    setTimeout(() => {
-                        // Use activeElement as the most reliable reference after a re-render
-                        const currentInput = document.activeElement && document.activeElement.tagName === 'INPUT' ? document.activeElement : this;
-                        const allInputs = Array.from(document.querySelectorAll('input, [contenteditable="true"]'))
-                            .filter(el => !el.disabled && el.offsetParent !== null && !el.classList.contains('clear-icon-btn'));
-                        
-                        const index = allInputs.indexOf(currentInput);
-                        if (index > -1 && allInputs[index + 1]) {
-                            allInputs[index + 1].focus();
-                            if (allInputs[index + 1].select) allInputs[index + 1].select();
-                        }
-                    }, 150); // Increased delay for stability
-                }
-            }
+            const yr = (parts.length === 3) ? parts[2] : '';
+            this._kd_yearWasIncomplete = (yr.length < 4);
         }
     });
 }

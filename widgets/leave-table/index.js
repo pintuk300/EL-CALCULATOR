@@ -57,7 +57,7 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
             return;
         }
 
-        // Get custom boundaries from current table state (Column 7 Leave From dates)
+        // Get custom boundaries
         const customBoundaries = Array.from(tbody.querySelectorAll('tr')).map(row => {
             const leaveFrom = row.querySelector('.leave-from-input')?.value;
             const leaveTo = row.querySelector('.leave-to-input')?.value;
@@ -73,59 +73,91 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
             leaveTo: row.querySelector('.leave-to-input').value
         }));
 
-        tbody.innerHTML = '';
+        // INTELLIGENT UPDATE: Only clear if row count changed
+        const existingRows = Array.from(tbody.children);
+        if (existingRows.length !== periods.length) {
+            tbody.innerHTML = '';
+        }
         
         let cumulativeCredit = parseInt(userInfo.openingBalance) || 0;
 
         periods.forEach((period, index) => {
-            const tr = document.createElement('tr');
-            tr.className = 'data-row';
+            let tr = existingRows.length === periods.length ? existingRows[index] : null;
+            const isNewRow = !tr;
+
+            if (isNewRow) {
+                tr = document.createElement('tr');
+                tr.className = 'data-row';
+                tbody.appendChild(tr);
+            }
             
-            // Restore data if available
             const savedRow = currentData[index] || initialRows[index] || {};
-            
             const fromStr = formatDateToDDMMYYYY(period.start);
             const toStr = formatDateToDDMMYYYY(period.end);
 
-            tr.innerHTML = `
-                <td>${fromStr}</td>
-                <td>${toStr}</td>
-                <td class="absent-cell" contenteditable="true">${savedRow.absent || ''}</td>
-                <td class="total-days-cell"></td>
-                <td class="earned-leave-cell"></td>
-                <td class="credit-cell"></td>
-                <td class="yellow-cell">
-                    <div class="date-input-container">
-                        <input type="text" class="leave-from-input" value="${savedRow.leaveFrom || ''}">
-                        <button class="clear-icon-btn row-clear" data-clear-type="from">×</button>
-                    </div>
-                </td>
-                <td class="yellow-cell">
-                    <div class="date-input-container">
-                        <input type="text" class="leave-to-input" value="${savedRow.leaveTo || ''}">
-                        <button class="clear-icon-btn row-clear" data-clear-type="to">×</button>
-                    </div>
-                </td>
-                <td class="leave-taken-cell"></td>
-                <td class="balance-cell"></td>
-            `;
+            if (isNewRow) {
+                tr.innerHTML = `
+                    <td>${fromStr}</td>
+                    <td>${toStr}</td>
+                    <td class="absent-cell" contenteditable="true">${savedRow.absent || ''}</td>
+                    <td class="total-days-cell"></td>
+                    <td class="earned-leave-cell"></td>
+                    <td class="credit-cell"></td>
+                    <td class="yellow-cell">
+                        <div class="date-input-container">
+                            <input type="text" class="leave-from-input" value="${savedRow.leaveFrom || ''}">
+                            <button class="clear-icon-btn row-clear" data-clear-type="from">×</button>
+                        </div>
+                    </td>
+                    <td class="yellow-cell">
+                        <div class="date-input-container">
+                            <input type="text" class="leave-to-input" value="${savedRow.leaveTo || ''}">
+                            <button class="clear-icon-btn row-clear" data-clear-type="to">×</button>
+                        </div>
+                    </td>
+                    <td class="leave-taken-cell"></td>
+                    <td class="balance-cell"></td>
+                `;
 
-            tbody.appendChild(tr);
-
-            // Setup row clear buttons
-            tr.querySelectorAll('.row-clear').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const type = e.target.dataset.clearType;
-                    const input = tr.querySelector(type === 'from' ? '.leave-from-input' : '.leave-to-input');
-                    if (input) {
-                        input.value = '';
-                        updateTable();
-                    }
+                // Setup row clear buttons
+                tr.querySelectorAll('.row-clear').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const type = e.target.dataset.clearType;
+                        const input = tr.querySelector(type === 'from' ? '.leave-from-input' : '.leave-to-input');
+                        if (input) {
+                            input.value = '';
+                            updateTable();
+                        }
+                    });
                 });
-            });
+
+                // Setup inputs
+                setupMaskedDateInput(tr.querySelector('.leave-from-input'), () => {
+                    const val = tr.querySelector('.leave-from-input').value;
+                    if (val.length === 10) {
+                        const lFrom = parseDDMMYYYYDate(val);
+                        if (lFrom <= period.start) {
+                            alert(`त्रुटि: कॉलम 7 की तारीख (${val}) कॉलम 1 की तारीख (${formatDateToDDMMYYYY(period.start)}) के बराबर या उससे पहले नहीं हो सकती।`);
+                            tr.querySelector('.leave-from-input').value = '';
+                        }
+                    }
+                    updateTable();
+                });
+                setupMaskedDateInput(tr.querySelector('.leave-to-input'), () => updateTable());
+                
+                tr.querySelector('.absent-cell').addEventListener('input', (e) => {
+                    e.target.textContent = e.target.textContent.replace(/[^0-9]/g, '');
+                    updateTable();
+                });
+            } else {
+                // Update labels only for existing rows
+                tr.cells[0].textContent = fromStr;
+                tr.cells[1].textContent = toStr;
+            }
 
             // Calculations
-            const absentDays = parseInt(savedRow.absent) || 0;
+            const currentAbsent = tr.querySelector('.absent-cell').textContent;
+            const absentDays = parseInt(currentAbsent) || 0;
             const totalDays = Math.max(0, Math.floor((period.end - period.start) / (1000 * 60 * 60 * 24)) + 1);
             const dutyDays = Math.max(0, totalDays - absentDays);
             
@@ -139,46 +171,24 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
             tr.querySelector('.earned-leave-cell').textContent = earned;
             tr.querySelector('.credit-cell').textContent = cumulativeCredit;
 
-            const leaveFrom = parseDDMMYYYYDate(savedRow.leaveFrom);
-            const leaveTo = parseDDMMYYYYDate(savedRow.leaveTo);
+            const lFromInput = tr.querySelector('.leave-from-input').value;
+            const lToInput = tr.querySelector('.leave-to-input').value;
+            const leaveFrom = parseDDMMYYYYDate(lFromInput);
+            const leaveTo = parseDDMMYYYYDate(lToInput);
             let leaveTaken = 0;
             if (leaveFrom && leaveTo && leaveTo >= leaveFrom) {
                 leaveTaken = Math.max(0, Math.floor((leaveTo - leaveFrom) / (1000 * 60 * 60 * 24)) + 1);
             }
             tr.querySelector('.leave-taken-cell').textContent = leaveTaken;
             tr.querySelector('.balance-cell').textContent = cumulativeCredit - leaveTaken;
-
-            // Setup inputs
-            setupMaskedDateInput(tr.querySelector('.leave-from-input'), () => {
-                const val = tr.querySelector('.leave-from-input').value;
-                if (val.length === 10) {
-                    const lFrom = parseDDMMYYYYDate(val);
-                    if (lFrom <= period.start) {
-                        alert(`त्रुटि: कॉलम 7 की तारीख (${val}) कॉलम 1 की तारीख (${formatDateToDDMMYYYY(period.start)}) के बराबर या उससे पहले नहीं हो सकती।`);
-                        tr.querySelector('.leave-from-input').value = '';
-                    }
-                }
-                updateTable();
-            });
-            setupMaskedDateInput(tr.querySelector('.leave-to-input'), () => updateTable());
-            
-            tr.querySelector('.absent-cell').addEventListener('input', (e) => {
-                e.target.textContent = e.target.textContent.replace(/[^0-9]/g, '');
-                updateTable();
-            });
         });
 
-        // Restore Focus
-        if (focusInfo && tbody.children[focusInfo.index]) {
+        // Restore Focus if row count didn't change
+        if (focusInfo && existingRows.length === periods.length) {
             const targetRow = tbody.children[focusInfo.index];
-            const targetInput = targetRow.querySelector(`.${focusInfo.className.replace(/\s+/g, '.')}`);
-            if (targetInput) {
+            const targetInput = targetRow?.querySelector(`.${focusInfo.className.replace(/\s+/g, '.')}`);
+            if (targetInput && document.activeElement !== targetInput) {
                 targetInput.focus();
-                // Move cursor to end if it's an input
-                if (targetInput.tagName === 'INPUT') {
-                    const val = targetInput.value;
-                    targetInput.setSelectionRange(val.length, val.length);
-                }
             }
         }
     }
