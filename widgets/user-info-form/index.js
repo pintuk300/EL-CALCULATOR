@@ -1,6 +1,6 @@
 import { setupMaskedDateInput } from '../../shared/ui/inputs/masked-date-input.js';
 import { setupDigitSanitizer } from '../../shared/ui/inputs/digit-sanitizer.js';
-import { getDOJThreeYearDate, formatDateToDDMMYYYY } from '../../shared/utils/date-engine.js';
+import { getDOJThreeYearDate, formatDateToDDMMYYYY, parseDDMMYYYYDate } from '../../shared/utils/date-engine.js';
 
 export function renderUserInfoForm(containerId, initialData = {}) {
     const container = document.getElementById(containerId);
@@ -36,11 +36,11 @@ export function renderUserInfoForm(containerId, initialData = {}) {
     // Setup Date Inputs
     ['dob', 'doj', 'leaveStart', 'leaveEnd'].forEach(id => {
         setupMaskedDateInput(document.getElementById(id), () => {
+            const dojVal = document.getElementById('doj').value;
+            const startInp = document.getElementById('leaveStart');
+            const endInp = document.getElementById('leaveEnd');
+            
             if (id === 'doj') {
-                const dojVal = document.getElementById('doj').value;
-                const startInp = document.getElementById('leaveStart');
-                const endInp = document.getElementById('leaveEnd');
-                
                 // Auto-fill Leave Period if they are currently empty
                 if (dojVal.length === 10) {
                     if (!startInp.value) startInp.value = dojVal;
@@ -48,6 +48,19 @@ export function renderUserInfoForm(containerId, initialData = {}) {
                 }
                 updateThreeYearComp();
             }
+
+            if (id === 'leaveStart' || id === 'doj') {
+                const startVal = startInp.value;
+                if (dojVal.length === 10 && startVal.length === 10) {
+                    const dDate = parseDDMMYYYYDate(dojVal);
+                    const sDate = parseDDMMYYYYDate(startVal);
+                    if (sDate < dDate) {
+                        alert(`त्रुटि: छुट्टी शुरू होने की तारीख (${startVal}) जॉइनिंग डेट (${dojVal}) से पहले नहीं हो सकती।`);
+                        startInp.value = dojVal; // Reset to DOJ
+                    }
+                }
+            }
+
             // Trigger global change
             container.dispatchEvent(new CustomEvent('user-info-change', { detail: getUserInfoData() }));
         });
