@@ -17,7 +17,7 @@ export function renderUserInfoForm(containerId, initialData = {}) {
                     <td class="label-cell">D.O.J</td>
                     <td class="value-cell"><div class="date-input-container"><input type="text" id="doj" value="${initialData.doj || ''}"><button class="clear-icon-btn" data-clear="doj">×</button></div></td>
                     <td class="label-cell">3 YRS COMP</td>
-                    <td class="value-cell"><span id="threeYearRange" class="three-year-range"></span></td>
+                    <td class="value-cell-wide"><span id="threeYearRange" class="three-year-range"></span></td>
                 </tr>
                 <tr>
                     <td class="label-cell">DESIGNATION</td>
@@ -27,7 +27,7 @@ export function renderUserInfoForm(containerId, initialData = {}) {
                     <td class="label-cell">TO</td>
                     <td class="value-cell"><div class="date-input-container"><input type="text" id="leaveEnd" value="${initialData.leaveEnd || ''}"><button class="clear-icon-btn" data-clear="leaveEnd">×</button></div></td>
                     <td class="label-cell">BALANCE EL</td>
-                    <td class="value-cell"><div class="date-input-container"><input type="number" id="openingBalance" value="${initialData.openingBalance || ''}"><button class="clear-icon-btn" data-clear="openingBalance">×</button></div></td>
+                    <td class="value-cell-wide"><div class="date-input-container"><input type="number" id="openingBalance" value="${initialData.openingBalance || ''}"><button class="clear-icon-btn" data-clear="openingBalance">×</button></div></td>
                 </tr>
             </tbody>
         </table>

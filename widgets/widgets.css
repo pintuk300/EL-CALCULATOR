@@ -1,6 +1,13 @@
 /* Widget Styles */
 
-.user-info-table, .detail-table {
+.user-info-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 10px;
+    table-layout: fixed; /* Prevents overflow */
+}
+
+.detail-table {
     width: 100%;
     border-collapse: collapse;
     margin-bottom: 10px;
@@ -8,19 +15,26 @@
 
 .user-info-table td, .detail-table td, .detail-table th {
     border: 1px solid #000;
-    padding: 8px;
-    font-size: 14px;
+    padding: 6px 8px; /* Slightly tighter padding */
+    font-size: 13px; /* Slightly smaller for better fit */
 }
 
 .label-cell {
     background-color: #f8f9fa;
     font-weight: bold;
-    white-space: nowrap;
+    width: 12%; /* Consistent label width */
 }
 
 .value-cell {
     background-color: #fff0a0;
     font-weight: bold;
+    width: 13%; /* Consistent value width */
+}
+
+.value-cell-wide {
+    background-color: #fff0a0;
+    font-weight: bold;
+    width: 25%; /* Wider for 3 YRS COMP */
 }
 
 .three-year-range {
