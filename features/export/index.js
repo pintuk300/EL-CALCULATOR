@@ -30,7 +30,7 @@ export function downloadPDF(docData) {
     doc.rect(margin, y, contentW, 10, 'FD');
     doc.setFontSize(13);
     doc.setFont('helvetica', 'bold');
-    doc.text('UNUTILIZED EARN LEAVE CALCULATOR', pageW / 2, y + 7, { align: 'center' });
+    doc.text('EARN LEAVE CALCULATOR', pageW / 2, y + 7, { align: 'center' });
     y += 11;
 
     const baseStyle = {
@@ -92,7 +92,7 @@ export function downloadPDF(docData) {
                 { content: 'EARNED\nLEAVE AT\nCREDIT\n(10+5)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                 { content: 'Period of Earned Leave Taken/Availed', colSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                 { content: 'NUMBER OF DAYS\nEARN LEAVE TAKEN', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
-                { content: 'BALANCE OF\nUNUTILIZED EARN\nLEAVE ON RETURN\nFROM LEAVE TAKEN\n(6-9)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
+                { content: 'BALANCE OF\nEARN LEAVE ON RETURN\nFROM LEAVE TAKEN\n(6-9)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
             ],
             [
                 { content: 'FROM', styles: { fillColor: blueFill, fontStyle: 'bold' } },
