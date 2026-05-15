@@ -194,7 +194,12 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                 leaveTaken = Math.max(0, Math.floor((leaveTo - leaveFrom) / (1000 * 60 * 60 * 24)) + 1);
             }
             tr.querySelector('.leave-taken-cell').textContent = leaveTaken;
-            tr.querySelector('.balance-cell').textContent = cumulativeCredit - leaveTaken;
+            
+            const balance = cumulativeCredit - leaveTaken;
+            tr.querySelector('.balance-cell').textContent = balance;
+
+            // PROPAGATE BALANCE TO NEXT ROW (Strict Rule)
+            cumulativeCredit = balance;
         });
 
         // HANDLE JUMPS
