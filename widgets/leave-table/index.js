@@ -152,8 +152,9 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                             alert(`त्रुटि: कॉलम 7 की तारीख (${val}) कॉलम 1 की तारीख (${formatDateToDDMMYYYY(period.start)}) के बाद होनी चाहिए।`);
                             tr.querySelector('.leave-from-input').value = '';
                         } else {
-                            // Column 7 to Column 8 Jump
-                            window._pendingTableJump = { rowIndex: index, colClass: '.leave-to-input' };
+                            // Column 7 to NEXT Row's Column 8 Jump
+                            // Since Col 7 splits the row, the leave actually starts in the next row
+                            window._pendingTableJump = { rowIndex: index + 1, colClass: '.leave-to-input' };
                         }
                     }
                     updateTable();
