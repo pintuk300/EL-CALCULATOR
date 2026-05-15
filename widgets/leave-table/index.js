@@ -1,5 +1,5 @@
 import { parseDDMMYYYYDate, formatDateToDDMMYYYY, splitPeriodByEffectiveDates } from '../../shared/utils/date-engine.js';
-import { calculateDivisor } from '../../shared/utils/calc-engine.js';
+import { calculateDivisor, calculateMaxEarnedLeave } from '../../shared/utils/calc-engine.js';
 import { setupMaskedDateInput } from '../../shared/ui/inputs/masked-date-input.js';
 import { calculateCustomBoundaries } from '../../shared/utils/boundary-engine.js';
 
@@ -181,11 +181,23 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
             const divisor = calculateDivisor(period.start, threeYrComp);
             const earned = Math.floor(dutyDays / divisor);
             
-            cumulativeCredit += earned;
+            const rawCredit = cumulativeCredit + earned;
+            const maxLimit = calculateMaxEarnedLeave(period.end);
+            
+            let displayCredit;
+            let creditForCalc;
+
+            if (rawCredit > maxLimit) {
+                displayCredit = `<span class="max-label">MAX: ${maxLimit}</span><span class="raw-label">(${rawCredit})</span>`;
+                creditForCalc = maxLimit;
+            } else {
+                displayCredit = rawCredit;
+                creditForCalc = rawCredit;
+            }
 
             tr.querySelector('.total-days-cell').textContent = `${dutyDays}÷${divisor}`;
             tr.querySelector('.earned-leave-cell').textContent = earned;
-            tr.querySelector('.credit-cell').textContent = cumulativeCredit;
+            tr.querySelector('.credit-cell').innerHTML = displayCredit;
 
             const leaveFrom = parseDDMMYYYYDate(tr.querySelector('.leave-from-input').value);
             const leaveTo = parseDDMMYYYYDate(tr.querySelector('.leave-to-input').value);
@@ -195,7 +207,7 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
             }
             tr.querySelector('.leave-taken-cell').textContent = leaveTaken;
             
-            const balance = cumulativeCredit - leaveTaken;
+            const balance = creditForCalc - leaveTaken;
             tr.querySelector('.balance-cell').textContent = balance;
 
             // PROPAGATE BALANCE TO NEXT ROW (Strict Rule)

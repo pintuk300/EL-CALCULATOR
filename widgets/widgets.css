@@ -133,3 +133,21 @@ input::-webkit-inner-spin-button {
 input[type=number] {
     -moz-appearance: textfield;
 }
+
+.credit-cell {
+    background-color: #dcdcdc !important;
+    font-weight: bold;
+}
+
+.max-label {
+    color: #b30000;
+    font-weight: bold;
+    display: block;
+    line-height: 1;
+}
+
+.raw-label {
+    color: #6b7280;
+    font-size: 11px;
+    font-weight: normal;
+}
