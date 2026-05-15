@@ -30,7 +30,7 @@ export function downloadPDF(docData) {
     doc.rect(margin, y, contentW, 10, 'FD');
     doc.setFontSize(13);
     doc.setFont('helvetica', 'bold');
-    doc.text('EARN LEAVE CALCULATOR', pageW / 2, y + 7, { align: 'center' });
+    doc.text('EARN LEAVE CALCULATION CHART', pageW / 2, y + 7, { align: 'center' });
     y += 11;
 
     const baseStyle = {
