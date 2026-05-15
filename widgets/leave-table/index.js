@@ -61,21 +61,28 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
         const customBoundaries = calculateCustomBoundaries(currentRows);
         const periods = splitPeriodByEffectiveDates(startDate, endDate, userInfo.doj, customBoundaries);
         
-        const currentData = currentRows.map(row => ({
-            absent: row.querySelector('.absent-cell').textContent,
-            leaveFrom: row.querySelector('.leave-from-input').value,
-            leaveTo: row.querySelector('.leave-to-input').value
-        }));
+        // Identify Exclusion Ranges (Leave Periods)
+        const exclusionRanges = currentData
+            .map(d => ({ from: parseDDMMYYYYDate(d.leaveFrom), to: parseDDMMYYYYDate(d.leaveTo) }))
+            .filter(r => r.from && r.to && r.to >= r.from);
+
+        // Filter out periods that are entirely within an exclusion range
+        const visiblePeriods = periods.filter(p => {
+            const isExcluded = exclusionRanges.some(range => 
+                p.start >= range.from && p.end <= range.to
+            );
+            return !isExcluded;
+        });
 
         const existingRows = Array.from(tbody.children);
-        if (existingRows.length !== periods.length) {
+        if (existingRows.length !== visiblePeriods.length) {
             tbody.innerHTML = '';
         }
         
         let cumulativeCredit = parseInt(userInfo.openingBalance) || 0;
 
-        periods.forEach((period, index) => {
-            let tr = existingRows.length === periods.length ? existingRows[index] : null;
+        visiblePeriods.forEach((period, index) => {
+            let tr = existingRows.length === visiblePeriods.length ? existingRows[index] : null;
             const isNewRow = !tr;
 
             if (isNewRow) {
@@ -187,7 +194,7 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                     if (targetInput.setSelectionRange) targetInput.setSelectionRange(0, 10);
                 }
             }, 0);
-        } else if (focusInfo && existingRows.length === periods.length) {
+        } else if (focusInfo && existingRows.length === visiblePeriods.length) {
             const targetRow = tbody.children[focusInfo.index];
             const targetInput = targetRow?.querySelector(`.${focusInfo.className.replace(/\s+/g, '.')}`);
             if (targetInput && document.activeElement !== targetInput) targetInput.focus();
