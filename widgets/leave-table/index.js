@@ -211,16 +211,24 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
             }
         }
 
-        // Handle Auto-Jump
+        // Handle Auto-Jump (Strict Atomic Implementation)
         if (window._pendingTableJump) {
-            const { rowIndex, colClass } = window._pendingTableJump;
-            const targetRow = tbody.children[rowIndex];
-            const targetInput = targetRow?.querySelector(colClass);
-            if (targetInput) {
-                targetInput.focus();
-                if (targetInput.select) targetInput.select();
-            }
+            const jump = window._pendingTableJump;
+            // Clear early to prevent loops
             delete window._pendingTableJump;
+            
+            const targetRow = tbody.children[jump.rowIndex];
+            if (targetRow) {
+                const targetInput = targetRow.querySelector(jump.colClass);
+                if (targetInput) {
+                    setTimeout(() => {
+                        targetInput.focus();
+                        if (targetInput.setSelectionRange) {
+                            targetInput.setSelectionRange(0, targetInput.value.length);
+                        }
+                    }, 0);
+                }
+            }
         }
     }
 
