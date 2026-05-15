@@ -146,7 +146,21 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                     }
                     updateTable();
                 });
-                setupMaskedDateInput(tr.querySelector('.leave-to-input'), () => updateTable());
+                
+                setupMaskedDateInput(tr.querySelector('.leave-to-input'), () => {
+                    const val = tr.querySelector('.leave-to-input').value;
+                    if (val.length === 10) {
+                        const lTo = parseDDMMYYYYDate(val);
+                        if (lTo && lTo > period.end) {
+                            alert(`त्रुटि: कॉलम 8 की तारीख (${val}) कॉलम 2 की तारीख (${formatDateToDDMMYYYY(period.end)}) से बाद की नहीं हो सकती। कृपया अधिक अवधि की छुट्टी को अगली पंक्ति में दर्ज करें।`);
+                            tr.querySelector('.leave-to-input').value = '';
+                        } else {
+                            // Column 8 to Next Row's Column 7 Jump
+                            window._pendingTableJump = { rowIndex: index + 1, colClass: '.leave-from-input' };
+                        }
+                    }
+                    updateTable();
+                });
                 
                 tr.querySelector('.absent-cell').addEventListener('input', (e) => {
                     e.target.textContent = e.target.textContent.replace(/[^0-9]/g, '');
