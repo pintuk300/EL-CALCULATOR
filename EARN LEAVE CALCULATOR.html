@@ -510,7 +510,7 @@
 
         <table class="detail-table">
             <tbody><tr>
-                <th colspan="2">DUTY PERIOD</th>
+                <th colspan="2">WORKING PERIOD</th>
                 <th rowspan="2">ABSENT<br>(IN DAYS)</th>
                 <th rowspan="2">TOTAL NO. OF<br>DAYS</th>
                 <th rowspan="2">LEAVE<br>EARNED<br>(IN<br>DAYS)</th>
@@ -1673,7 +1673,7 @@
                         const col7Date = parseDDMMYYYYDate(input.value);
                         
                         if (col1Date && col7Date && col7Date <= col1Date) {
-                            alert('LEAVE FROM (Col 7) की तारीख हमेशा DUTY FROM (Col 1) से अधिक होनी चाहिए।');
+                            alert('LEAVE FROM (Col 7) की तारीख हमेशा WORKING FROM (Col 1) से अधिक होनी चाहिए।');
                             input.value = '';
                             recalculateFormulaColumns();
                             return;
@@ -1933,7 +1933,7 @@
                         },
                         head: [
                             [
-                                { content: 'DUTY PERIOD', colSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
+                                { content: 'WORKING PERIOD', colSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                                 { content: 'ABSENT\n(IN DAYS)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                                 { content: 'TOTAL NO. OF\nDAYS', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                                 { content: 'LEAVE\nEARNED\n(IN DAYS)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },

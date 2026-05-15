@@ -85,7 +85,7 @@ export function downloadPDF(docData) {
         },
         head: [
             [
-                { content: 'DUTY PERIOD', colSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
+                { content: 'WORKING PERIOD', colSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                 { content: 'ABSENT\n(IN DAYS)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                 { content: 'TOTAL NO. OF\nDAYS', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                 { content: 'LEAVE\nEARNED\n(IN DAYS)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
