@@ -3,19 +3,18 @@
 .btn-base {
     display: inline-flex;
     align-items: center;
-    justify-content: center;
     gap: 8px;
     color: #fff;
     border: none;
-    border-radius: 10px;
-    padding: 12px 24px;
-    font-size: 14px;
-    font-weight: 600;
+    border-radius: 6px;
+    padding: 10px 22px;
+    font-size: 15px;
+    font-weight: bold;
     font-family: inherit;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    letter-spacing: 0.01em;
-    white-space: nowrap;
+    transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+    letter-spacing: 0.3px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
 .btn-base:hover {
@@ -65,14 +64,5 @@
 }
 
 .clear-icon-btn:hover {
-    color: #ef4444;
-    background-color: #fee2e2;
-}
-
-@media (max-width: 640px) {
-    .btn-base {
-        padding: 14px 12px;
-        font-size: 13px;
-        border-radius: 8px;
-    }
+    color: #000;
 }
