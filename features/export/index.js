@@ -86,13 +86,13 @@ export function downloadPDF(docData) {
         head: [
             [
                 { content: 'WORKING PERIOD', colSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
-                { content: 'ABSENT\n(IN DAYS)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                 { content: 'TOTAL NO. OF\nWORKING DAYS', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                 { content: 'LEAVE\nEARNED\n(IN DAYS)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                 { content: 'EARNED\nLEAVE AT\nCREDIT\n(10+5)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                 { content: 'Period of Earned Leave Taken/Availed', colSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                 { content: 'NUMBER OF DAYS\nEARN LEAVE TAKEN', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                 { content: 'BALANCE OF\nEARN LEAVE ON RETURN\nFROM LEAVE TAKEN\n(6-9)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
+                { content: 'REMARKS', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
             ],
             [
                 { content: 'FROM', styles: { fillColor: blueFill, fontStyle: 'bold' } },
@@ -106,7 +106,7 @@ export function downloadPDF(docData) {
             content: cell,
             styles: {
                 textColor: (typeof cell === 'string' && cell.startsWith('-')) ? [200, 0, 0] : [0, 0, 0],
-                fillColor: (idx === 6 || idx === 7) ? yellowFill : whiteFill,
+                fillColor: (idx === 5 || idx === 6) ? yellowFill : whiteFill,
                 fontStyle: 'bold',
             }
         }))),

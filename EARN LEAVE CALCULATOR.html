@@ -511,13 +511,13 @@
         <table class="detail-table">
             <tbody><tr>
                 <th colspan="2">WORKING PERIOD</th>
-                <th rowspan="2">ABSENT<br>(IN DAYS)</th>
                 <th rowspan="2">TOTAL NO. OF<br>WORKING DAYS</th>
                 <th rowspan="2">LEAVE<br>EARNED<br>(IN<br>DAYS)</th>
                 <th rowspan="2">EARNED<br>LEAVE AT<br>CREDIT<br>(10+5)</th>
                 <th colspan="2">Period of Earned Leave Taken/Availed</th>
                 <th rowspan="2">NUMBER OF<br>DAYS EARN<br>LEAVE TAKEN</th>
                 <th rowspan="2">BALANCE OF<br>EARN<br>LEAVE ON RETURN<br>FROM LEAVE TAKEN<br>(6-9)</th>
+                <th rowspan="2">REMARKS</th>
             </tr>
             <tr>
                 <th>FROM</th>
@@ -803,21 +803,21 @@
                 }
 
                 const col2Date = parseDDMMYYYYDate(cells[1].textContent.trim());
-                const absentDays = getAbsentDays(cells[2]);
                 
                 let totalDays = 0;
                 if (col1Date && col2Date) {
                     totalDays = Math.max(0, Math.floor((col2Date - col1Date) / (1000 * 60 * 60 * 24)) + 1);
                 }
-                const dutyDays = Math.max(0, totalDays - absentDays);
+                const dutyDays = totalDays; // Remarks field no longer affects calculation
+                const absentDays = getAbsentDays(cells[9]); // For saving/loading purposes, but not math
 
                 const threeYrDate = getDOJThreeYearDate();
                 const divisor = (threeYrDate && col1Date && col1Date > threeYrDate) ? 11 : 22;
                 
-                cells[3].textContent = dutyDays + '÷' + divisor;
+                cells[2].textContent = dutyDays + '÷' + divisor;
                 
                 const earned = Math.floor(dutyDays / divisor);
-                cells[4].textContent = earned;
+                cells[3].textContent = earned;
                 
                 // Cumulative logic (previous Col 6 + current Col 5)
                 let prevCredit = 0;
@@ -825,14 +825,15 @@
                     const openingBalanceInput = document.getElementById('openingBalance');
                     prevCredit = parseInt(openingBalanceInput ? openingBalanceInput.value : '0') || 0;
                 } else {
-                    prevCredit = parseInt(dataRows[index - 1].querySelectorAll('td')[5].textContent) || 0;
+                    prevCredit = parseInt(dataRows[index - 1].querySelectorAll('td')[4].textContent) || 0;
                 }
                 
                 const currentCredit = prevCredit + earned;
-                cells[5].textContent = currentCredit;
+                cells[4].textContent = currentCredit;
 
-                const leaveTakenDays = parseInt(cells[8].textContent) || 0;
-                cells[9].textContent = currentCredit - leaveTakenDays;
+                const leaveTakenDays = parseInt(cells[7].textContent) || 0;
+                cells[8].textContent = currentCredit - leaveTakenDays;
+                cells[9].textContent = cells[9].textContent; // Keep remarks as is
             });
 
             updateBalanceEL();
@@ -1142,11 +1143,6 @@
             td2.setAttribute('data-original-date', formattedDate2);
             tr.appendChild(td2);
 
-            const td3 = document.createElement('td');
-            td3.className = 'absent-cell';
-            td3.contentEditable = 'true';
-            tr.appendChild(td3);
-
             for (let i = 0; i < 3; i++) {
                 tr.appendChild(document.createElement('td'));
             }
@@ -1172,6 +1168,11 @@
             }
             tr.appendChild(document.createElement('td'));
             tr.appendChild(document.createElement('td'));
+
+            const tdRemarks = document.createElement('td');
+            tdRemarks.className = 'absent-cell';
+            tdRemarks.contentEditable = 'true';
+            tr.appendChild(tdRemarks);
 
             return tr;
         }
@@ -1207,10 +1208,10 @@
                     savedData.push({
                         col1: cells[0].textContent.trim(),
                         col2: cells[1].getAttribute('data-original-date') || cells[1].textContent.trim(),
-                        absent: cells[2].textContent.trim(),
                         leaveFrom: dateInputs[0] ? dateInputs[0].value : "",
                         leaveTo: dateInputs[1] ? dateInputs[1].value : "",
-                        leaveTaken: cells[8].textContent.trim()
+                        leaveTaken: cells[7].textContent.trim(),
+                        absent: cells[9].textContent.trim(),
                     });
                 });
             }
@@ -1250,11 +1251,11 @@
                                 inputs[0].value = d.leaveFrom;
                                 inputs[1].value = d.leaveTo;
                             }
-                            cells[8].textContent = d.leaveTaken;
+                            cells[7].textContent = d.leaveTaken;
                         }
                         
                         // Always restore absent days if they match the row
-                        cells[2].textContent = d.absent;
+                        cells[9].textContent = d.absent;
                         break;
                     }
                 }
@@ -1934,13 +1935,13 @@
                         head: [
                             [
                                 { content: 'WORKING PERIOD', colSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
-                                { content: 'ABSENT\n(IN DAYS)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                                 { content: 'TOTAL NO. OF\nWORKING DAYS', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                                 { content: 'LEAVE\nEARNED\n(IN DAYS)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                                 { content: 'EARNED\nLEAVE AT\nCREDIT\n(10+5)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                                 { content: 'Period of Earned Leave Taken/Availed', colSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                                 { content: 'NUMBER OF DAYS\nEARN LEAVE TAKEN', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                                 { content: 'BALANCE OF\nEARN LEAVE ON RETURN\nFROM LEAVE TAKEN\n(6-9)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
+                                { content: 'REMARKS', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                             ],
                             [
                                 { content: 'FROM', styles: { fillColor: blueFill, fontStyle: 'bold' } },

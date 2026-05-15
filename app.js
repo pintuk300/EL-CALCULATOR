@@ -45,8 +45,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 threeYrComp: userInfo.threeYearComp
             },
             rows: tableRows.map(r => [
-                r.col1, r.col2, r.absent, r.totalDays, r.earnedLeave, 
-                r.cumulativeCredit, r.leaveFrom, r.leaveTo, r.leaveTaken, r.balance
+                r.col1, r.col2, r.totalDays, r.earnedLeave, 
+                r.cumulativeCredit, r.leaveFrom, r.leaveTo, r.leaveTaken, r.balance, r.absent
             ])
         };
         

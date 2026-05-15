@@ -12,13 +12,13 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
             <thead>
                 <tr>
                     <th colspan="2">WORKING PERIOD</th>
-                    <th rowspan="2">ABSENT<br>(IN DAYS)</th>
                     <th rowspan="2">TOTAL NO. OF<br>WORKING DAYS</th>
                     <th rowspan="2">LEAVE<br>EARNED<br>(IN<br>DAYS)</th>
                     <th rowspan="2">EARNED<br>LEAVE AT<br>CREDIT</th>
                     <th colspan="2">Period of Earned Leave Taken/Availed</th>
                     <th rowspan="2">NUMBER OF<br>DAYS EARN<br>LEAVE TAKEN</th>
                     <th rowspan="2">BALANCE OF<br>EARN<br>LEAVE</th>
+                    <th rowspan="2">REMARKS</th>
                 </tr>
                 <tr>
                     <th>FROM</th>
@@ -111,7 +111,6 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                 tr.innerHTML = `
                     <td>${fromStr}</td>
                     <td>${toStr}</td>
-                    <td class="absent-cell" contenteditable="true">${savedRow.absent || ''}</td>
                     <td class="total-days-cell"></td>
                     <td class="earned-leave-cell"></td>
                     <td class="credit-cell"></td>
@@ -129,6 +128,7 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                     </td>
                     <td class="leave-taken-cell"></td>
                     <td class="balance-cell"></td>
+                    <td class="absent-cell" contenteditable="true">${savedRow.absent || ''}</td>
                 `;
 
                 tr.querySelectorAll('.row-clear').forEach(btn => {
@@ -173,9 +173,8 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                 tr.cells[1].textContent = toStr;
             }
 
-            const absentDays = parseInt(tr.querySelector('.absent-cell').textContent) || 0;
             const totalDays = Math.max(0, Math.floor((period.end - period.start) / (1000 * 60 * 60 * 24)) + 1);
-            const dutyDays = Math.max(0, totalDays - absentDays);
+            const dutyDays = totalDays; // Remarks field no longer affects calculation
             
             const threeYrComp = userInfo.threeYearComp ? parseDDMMYYYYDate(userInfo.threeYearComp.split(' TO ')[1]) : null;
             const divisor = calculateDivisor(period.start, threeYrComp);
@@ -239,12 +238,12 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
         update: (newUserInfo) => { userInfo = newUserInfo; updateTable(); },
         getData: () => Array.from(tbody.querySelectorAll('tr')).map(row => ({
             col1: row.cells[0].textContent, col2: row.cells[1].textContent,
-            absent: row.querySelector('.absent-cell').textContent,
-            totalDays: row.cells[3].textContent, earnedLeave: row.cells[4].textContent,
-            cumulativeCredit: row.cells[5].textContent,
+            totalDays: row.cells[2].textContent, earnedLeave: row.cells[3].textContent,
+            cumulativeCredit: row.cells[4].textContent,
             leaveFrom: row.querySelector('.leave-from-input').value,
             leaveTo: row.querySelector('.leave-to-input').value,
-            leaveTaken: row.cells[8].textContent, balance: row.cells[9].textContent
+            leaveTaken: row.cells[7].textContent, balance: row.cells[8].textContent,
+            absent: row.querySelector('.absent-cell').textContent
         }))
     };
 }
