@@ -87,7 +87,7 @@ export function downloadPDF(docData) {
             [
                 { content: 'WORKING PERIOD', colSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                 { content: 'ABSENT\n(IN DAYS)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
-                { content: 'TOTAL NO. OF\nDAYS', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
+                { content: 'TOTAL NO. OF\nWORKING DAYS', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                 { content: 'LEAVE\nEARNED\n(IN DAYS)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                 { content: 'EARNED\nLEAVE AT\nCREDIT\n(10+5)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                 { content: 'UNUTILIZED LEAVE TAKEN PERIOD', colSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
