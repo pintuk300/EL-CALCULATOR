@@ -143,8 +143,11 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                     const val = tr.querySelector('.leave-from-input').value;
                     if (val.length === 10) {
                         const lFrom = parseDDMMYYYYDate(val);
-                        if (lFrom && lFrom <= period.start) {
-                            alert(`त्रुटि: कॉलम 7 की तारीख (${val}) कॉलम 1 की तारीख (${formatDateToDDMMYYYY(period.start)}) के बाद होनी चाहिए।`);
+                        const col1DateStr = tr.cells[0].textContent; // Live check
+                        const col1Date = parseDDMMYYYYDate(col1DateStr);
+                        
+                        if (lFrom && col1Date && lFrom <= col1Date) {
+                            alert(`त्रुटि: कॉलम 7 की तारीख (${val}) कॉलम 1 की तारीख (${col1DateStr}) के बाद होनी चाहिए।`);
                             tr.querySelector('.leave-from-input').value = '';
                         } else {
                             window._pendingTableJump = { rowIndex: index, colClass: '.leave-to-input' };
