@@ -22,25 +22,25 @@
 .label-cell {
     background-color: #f8f9fa;
     font-weight: bold;
-    width: 8%; /* Compact label width */
+    width: 5%; /* Minimized for specific user layout */
 }
 
 .value-cell {
     background-color: #fff0a0;
     font-weight: bold;
-    width: 9%; /* Compact for dates */
+    width: 15%; /* Exact 15% for dates */
 }
 
 .value-cell-name {
     background-color: #fff0a0;
     font-weight: bold;
-    width: 35%; /* Extra wide for Name/Designation */
+    width: 25%; /* Exact 25% for Name/Designation */
 }
 
 .value-cell-compact {
     background-color: #fff0a0;
     font-weight: bold;
-    width: 15%; /* Sufficient for 3Yr and Balance */
+    width: 25%; /* Exact 25% for 3Yr and Balance */
 }
 
 .three-year-range {
