@@ -59,21 +59,9 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
 
         // Get custom boundaries (Column 7 Leave From acts as the start of a new split, so previous ends at Leave From - 1)
         const customBoundaries = Array.from(tbody.querySelectorAll('tr')).map(row => {
-            const leaveFromVal = row.querySelector('.leave-from-input')?.value;
             const leaveToVal = row.querySelector('.leave-to-input')?.value;
-            
-            const boundaries = [];
-            const lf = parseDDMMYYYYDate(leaveFromVal);
             const lt = parseDDMMYYYYDate(leaveToVal);
-            
-            if (lf) {
-                const prevDay = new Date(lf);
-                prevDay.setDate(prevDay.getDate() - 1);
-                boundaries.push(prevDay);
-            }
-            if (lt) boundaries.push(lt);
-            
-            return boundaries;
+            return lt ? [lt] : [];
         }).flat().filter(d => d);
 
         const periods = splitPeriodByEffectiveDates(startDate, endDate, userInfo.doj, customBoundaries);
@@ -148,14 +136,25 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                     const val = tr.querySelector('.leave-from-input').value;
                     if (val.length === 10) {
                         const lFrom = parseDDMMYYYYDate(val);
-                        if (lFrom <= period.start) {
-                            alert(`त्रुटि: कॉलम 7 की तारीख (${val}) कॉलम 1 की तारीख (${formatDateToDDMMYYYY(period.start)}) के बराबर या उससे पहले नहीं हो सकती।`);
+                        if (lFrom && lFrom <= period.start) {
+                            alert(`त्रुटि: कॉलम 7 की तारीख (${val}) कॉलम 1 की तारीख (${formatDateToDDMMYYYY(period.start)}) के बाद होनी चाहिए।`);
                             tr.querySelector('.leave-from-input').value = '';
                         }
                     }
                     updateTable();
                 });
-                setupMaskedDateInput(tr.querySelector('.leave-to-input'), () => updateTable());
+                
+                setupMaskedDateInput(tr.querySelector('.leave-to-input'), () => {
+                    const val = tr.querySelector('.leave-to-input').value;
+                    if (val.length === 10) {
+                        const lTo = parseDDMMYYYYDate(val);
+                        if (lTo && lTo > period.end) {
+                            alert(`त्रुटि: कॉलम 8 की तारीख (${val}) कॉलम 2 की तारीख (${formatDateToDDMMYYYY(period.end)}) से बाद की नहीं हो सकती। कृपया अधिक अवधि की छुट्टी को अगली पंक्ति में दर्ज करें।`);
+                            tr.querySelector('.leave-to-input').value = '';
+                        }
+                    }
+                    updateTable();
+                });
                 
                 tr.querySelector('.absent-cell').addEventListener('input', (e) => {
                     e.target.textContent = e.target.textContent.replace(/[^0-9]/g, '');
