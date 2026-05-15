@@ -60,18 +60,14 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
         // Get custom boundaries (Column 7 Leave From acts as the start of a new split, so previous ends at Leave From - 1)
         const customBoundaries = Array.from(tbody.querySelectorAll('tr')).map(row => {
             const leaveFromVal = row.querySelector('.leave-from-input')?.value;
-            const leaveToVal = row.querySelector('.leave-to-input')?.value;
-            
             const boundaries = [];
             const lf = parseDDMMYYYYDate(leaveFromVal);
-            const lt = parseDDMMYYYYDate(leaveToVal);
             
             if (lf) {
                 const prevDay = new Date(lf);
                 prevDay.setDate(prevDay.getDate() - 1);
                 boundaries.push(prevDay);
             }
-            if (lt) boundaries.push(lt);
             
             return boundaries;
         }).flat().filter(d => d);
