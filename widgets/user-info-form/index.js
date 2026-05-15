@@ -11,23 +11,23 @@ export function renderUserInfoForm(containerId, initialData = {}) {
             <tbody>
                 <tr>
                     <td class="label-cell">NAME</td>
-                    <td class="value-cell"><div class="date-input-container"><input type="text" id="userName" value="${initialData.name || ''}"><button class="clear-icon-btn" data-clear="userName">×</button></div></td>
+                    <td class="value-cell-name"><div class="date-input-container"><input type="text" id="userName" value="${initialData.name || ''}"><button class="clear-icon-btn" data-clear="userName">×</button></div></td>
                     <td class="label-cell">D.O.B</td>
                     <td class="value-cell"><div class="date-input-container"><input type="text" id="dob" value="${initialData.dob || ''}"><button class="clear-icon-btn" data-clear="dob">×</button></div></td>
                     <td class="label-cell">D.O.J</td>
                     <td class="value-cell"><div class="date-input-container"><input type="text" id="doj" value="${initialData.doj || ''}"><button class="clear-icon-btn" data-clear="doj">×</button></div></td>
                     <td class="label-cell">3 YRS COMP</td>
-                    <td class="value-cell-wide"><span id="threeYearRange" class="three-year-range"></span></td>
+                    <td class="value-cell-compact"><span id="threeYearRange" class="three-year-range"></span></td>
                 </tr>
                 <tr>
                     <td class="label-cell">DESIGNATION</td>
-                    <td class="value-cell"><div class="date-input-container"><input type="text" id="userDesignation" value="${initialData.designation || ''}"><button class="clear-icon-btn" data-clear="userDesignation">×</button></div></td>
+                    <td class="value-cell-name"><div class="date-input-container"><input type="text" id="userDesignation" value="${initialData.designation || ''}"><button class="clear-icon-btn" data-clear="userDesignation">×</button></div></td>
                     <td class="label-cell">LEAVE FROM</td>
                     <td class="value-cell"><div class="date-input-container"><input type="text" id="leaveStart" value="${initialData.leaveStart || ''}"><button class="clear-icon-btn" data-clear="leaveStart">×</button></div></td>
                     <td class="label-cell">TO</td>
                     <td class="value-cell"><div class="date-input-container"><input type="text" id="leaveEnd" value="${initialData.leaveEnd || ''}"><button class="clear-icon-btn" data-clear="leaveEnd">×</button></div></td>
                     <td class="label-cell">BALANCE EL</td>
-                    <td class="value-cell-wide"><div class="date-input-container"><input type="number" id="openingBalance" value="${initialData.openingBalance || ''}"><button class="clear-icon-btn" data-clear="openingBalance">×</button></div></td>
+                    <td class="value-cell-compact"><div class="date-input-container"><input type="number" id="openingBalance" value="${initialData.openingBalance || ''}"><button class="clear-icon-btn" data-clear="openingBalance">×</button></div></td>
                 </tr>
             </tbody>
         </table>
