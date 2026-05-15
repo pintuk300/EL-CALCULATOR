@@ -139,22 +139,14 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                         if (lFrom && lFrom <= period.start) {
                             alert(`त्रुटि: कॉलम 7 की तारीख (${val}) कॉलम 1 की तारीख (${formatDateToDDMMYYYY(period.start)}) के बाद होनी चाहिए।`);
                             tr.querySelector('.leave-from-input').value = '';
+                        } else {
+                            // Column 7 to Column 8 Jump
+                            window._pendingTableJump = { rowIndex: index, colClass: '.leave-to-input' };
                         }
                     }
                     updateTable();
                 });
-                
-                setupMaskedDateInput(tr.querySelector('.leave-to-input'), () => {
-                    const val = tr.querySelector('.leave-to-input').value;
-                    if (val.length === 10) {
-                        const lTo = parseDDMMYYYYDate(val);
-                        if (lTo && lTo > period.end) {
-                            alert(`त्रुटि: कॉलम 8 की तारीख (${val}) कॉलम 2 की तारीख (${formatDateToDDMMYYYY(period.end)}) से बाद की नहीं हो सकती। कृपया अधिक अवधि की छुट्टी को अगली पंक्ति में दर्ज करें।`);
-                            tr.querySelector('.leave-to-input').value = '';
-                        }
-                    }
-                    updateTable();
-                });
+                setupMaskedDateInput(tr.querySelector('.leave-to-input'), () => updateTable());
                 
                 tr.querySelector('.absent-cell').addEventListener('input', (e) => {
                     e.target.textContent = e.target.textContent.replace(/[^0-9]/g, '');
@@ -201,6 +193,18 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
             if (targetInput && document.activeElement !== targetInput) {
                 targetInput.focus();
             }
+        }
+
+        // Handle Auto-Jump
+        if (window._pendingTableJump) {
+            const { rowIndex, colClass } = window._pendingTableJump;
+            const targetRow = tbody.children[rowIndex];
+            const targetInput = targetRow?.querySelector(colClass);
+            if (targetInput) {
+                targetInput.focus();
+                if (targetInput.select) targetInput.select();
+            }
+            delete window._pendingTableJump;
         }
     }
 
