@@ -73,9 +73,15 @@ export function renderUserInfoForm(containerId, initialData = {}) {
         }
     }
 
-    // Setup Sanitizers
+    // Setup Sanitizers & Realtime Sync
     ['openingBalance'].forEach(id => {
-        setupDigitSanitizer(document.getElementById(id));
+        const input = document.getElementById(id);
+        setupDigitSanitizer(input);
+        
+        // Realtime sync for balance
+        input.addEventListener('input', () => {
+            container.dispatchEvent(new CustomEvent('user-info-change', { detail: getUserInfoData() }));
+        });
     });
 
     // Clear buttons logic
