@@ -1170,7 +1170,7 @@
             tr.appendChild(document.createElement('td'));
 
             const tdRemarks = document.createElement('td');
-            tdRemarks.className = 'absent-cell';
+            tdRemarks.className = 'absent-cell yellow-cell';
             tdRemarks.contentEditable = 'true';
             tr.appendChild(tdRemarks);
 
@@ -1762,14 +1762,12 @@
             tbody.addEventListener('input', function(e) {
                 const cell = e.target;
                 if (!cell.classList.contains('absent-cell')) return;
-                cell.textContent = cell.textContent.replace(/[^0-9]/g, '');
                 recalculateFormulaColumns();
             });
 
             tbody.addEventListener('blur', function(e) {
                 const cell = e.target;
                 if (!cell.classList.contains('absent-cell')) return;
-                cell.textContent = cell.textContent.replace(/[^0-9]/g, '');
                 recalculateFormulaColumns();
             }, true);
         }

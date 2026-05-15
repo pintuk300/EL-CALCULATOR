@@ -128,7 +128,7 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                     </td>
                     <td class="leave-taken-cell"></td>
                     <td class="balance-cell"></td>
-                    <td class="absent-cell" contenteditable="true">${savedRow.absent || ''}</td>
+                    <td class="absent-cell yellow-cell" contenteditable="true">${savedRow.absent || ''}</td>
                 `;
 
                 tr.querySelectorAll('.row-clear').forEach(btn => {
@@ -165,7 +165,6 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                 });
                 
                 tr.querySelector('.absent-cell').addEventListener('input', (e) => {
-                    e.target.textContent = e.target.textContent.replace(/[^0-9]/g, '');
                     updateTable();
                 });
             } else {
