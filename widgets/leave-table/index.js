@@ -1,6 +1,7 @@
-import { parseDDMMYYYYDate, formatDateToDDMMYYYY, splitPeriodByEffectiveDates, getPreviousDateDDMMYYYY, getNextDateDDMMYYYY } from '../../shared/utils/date-engine.js';
-import { calculateDivisor, calculateEarnedLeave } from '../../shared/utils/calc-engine.js';
+import { parseDDMMYYYYDate, formatDateToDDMMYYYY, splitPeriodByEffectiveDates } from '../../shared/utils/date-engine.js';
+import { calculateDivisor } from '../../shared/utils/calc-engine.js';
 import { setupMaskedDateInput } from '../../shared/ui/inputs/masked-date-input.js';
+import { calculateCustomBoundaries } from '../../shared/utils/boundary-engine.js';
 
 export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
     const container = document.getElementById(containerId);
@@ -39,49 +40,33 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
         const startDate = parseDDMMYYYYDate(userInfo.leaveStart);
         const endDate = parseDDMMYYYYDate(userInfo.leaveEnd);
 
-        // Save focus state
-        const activeEl = document.activeElement;
-        let focusInfo = null;
-        if (activeEl && activeEl.tagName === 'INPUT') {
-            const row = activeEl.closest('tr');
-            if (row && row.parentNode === tbody) {
-                focusInfo = {
-                    index: Array.from(tbody.children).indexOf(row),
-                    className: activeEl.className
-                };
-            }
-        }
-
         if (!startDate || !endDate || endDate < startDate) {
             tbody.innerHTML = '';
             return;
         }
 
-        // Get custom boundaries (Column 7 Leave From acts as the start of a new split, so previous ends at Leave From - 1)
-        const customBoundaries = Array.from(tbody.querySelectorAll('tr')).map(row => {
-            const leaveFromVal = row.querySelector('.leave-from-input')?.value;
-            const boundaries = [];
-            const lf = parseDDMMYYYYDate(leaveFromVal);
-            
-            if (lf) {
-                const prevDay = new Date(lf);
-                prevDay.setDate(prevDay.getDate() - 1);
-                boundaries.push(prevDay);
-            }
-            
-            return boundaries;
-        }).flat().filter(d => d);
+        // Save current focus and state before re-render
+        const activeEl = document.activeElement;
+        let focusInfo = null;
+        if (activeEl && activeEl.tagName === 'INPUT') {
+            const row = activeEl.closest('tr');
+            focusInfo = {
+                index: Array.from(tbody.children).indexOf(row),
+                className: activeEl.className
+            };
+        }
 
+        // ATOMIC BOUNDARY CALCULATION
+        const currentRows = Array.from(tbody.querySelectorAll('tr'));
+        const customBoundaries = calculateCustomBoundaries(currentRows);
         const periods = splitPeriodByEffectiveDates(startDate, endDate, userInfo.doj, customBoundaries);
         
-        // Save current user entries
-        const currentData = Array.from(tbody.querySelectorAll('tr')).map(row => ({
+        const currentData = currentRows.map(row => ({
             absent: row.querySelector('.absent-cell').textContent,
             leaveFrom: row.querySelector('.leave-from-input').value,
             leaveTo: row.querySelector('.leave-to-input').value
         }));
 
-        // INTELLIGENT UPDATE: Only clear if row count changed
         const existingRows = Array.from(tbody.children);
         if (existingRows.length !== periods.length) {
             tbody.innerHTML = '';
@@ -127,19 +112,14 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                     <td class="balance-cell"></td>
                 `;
 
-                // Setup row clear buttons
                 tr.querySelectorAll('.row-clear').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         const type = e.target.dataset.clearType;
                         const input = tr.querySelector(type === 'from' ? '.leave-from-input' : '.leave-to-input');
-                        if (input) {
-                            input.value = '';
-                            updateTable();
-                        }
+                        if (input) { input.value = ''; updateTable(); }
                     });
                 });
 
-                // Setup inputs
                 setupMaskedDateInput(tr.querySelector('.leave-from-input'), () => {
                     const val = tr.querySelector('.leave-from-input').value;
                     if (val.length === 10) {
@@ -148,7 +128,6 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                             alert(`त्रुटि: कॉलम 7 की तारीख (${val}) कॉलम 1 की तारीख (${formatDateToDDMMYYYY(period.start)}) के बाद होनी चाहिए।`);
                             tr.querySelector('.leave-from-input').value = '';
                         } else {
-                            // Column 7 to Column 8 Jump
                             window._pendingTableJump = { rowIndex: index, colClass: '.leave-to-input' };
                         }
                     }
@@ -158,7 +137,6 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                 setupMaskedDateInput(tr.querySelector('.leave-to-input'), () => {
                     const val = tr.querySelector('.leave-to-input').value;
                     if (val.length === 10) {
-                        // Column 8 to Next Row's Column 7 Jump
                         window._pendingTableJump = { rowIndex: index + 1, colClass: '.leave-from-input' };
                     }
                     updateTable();
@@ -169,14 +147,11 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                     updateTable();
                 });
             } else {
-                // Update labels only for existing rows
                 tr.cells[0].textContent = fromStr;
                 tr.cells[1].textContent = toStr;
             }
 
-            // Calculations
-            const currentAbsent = tr.querySelector('.absent-cell').textContent;
-            const absentDays = parseInt(currentAbsent) || 0;
+            const absentDays = parseInt(tr.querySelector('.absent-cell').textContent) || 0;
             const totalDays = Math.max(0, Math.floor((period.end - period.start) / (1000 * 60 * 60 * 24)) + 1);
             const dutyDays = Math.max(0, totalDays - absentDays);
             
@@ -190,10 +165,8 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
             tr.querySelector('.earned-leave-cell').textContent = earned;
             tr.querySelector('.credit-cell').textContent = cumulativeCredit;
 
-            const lFromInput = tr.querySelector('.leave-from-input').value;
-            const lToInput = tr.querySelector('.leave-to-input').value;
-            const leaveFrom = parseDDMMYYYYDate(lFromInput);
-            const leaveTo = parseDDMMYYYYDate(lToInput);
+            const leaveFrom = parseDDMMYYYYDate(tr.querySelector('.leave-from-input').value);
+            const leaveTo = parseDDMMYYYYDate(tr.querySelector('.leave-to-input').value);
             let leaveTaken = 0;
             if (leaveFrom && leaveTo && leaveTo >= leaveFrom) {
                 leaveTaken = Math.max(0, Math.floor((leaveTo - leaveFrom) / (1000 * 60 * 60 * 24)) + 1);
@@ -202,54 +175,37 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
             tr.querySelector('.balance-cell').textContent = cumulativeCredit - leaveTaken;
         });
 
-        // Restore Focus if row count didn't change
-        if (focusInfo && existingRows.length === periods.length) {
-            const targetRow = tbody.children[focusInfo.index];
-            const targetInput = targetRow?.querySelector(`.${focusInfo.className.replace(/\s+/g, '.')}`);
-            if (targetInput && document.activeElement !== targetInput) {
-                targetInput.focus();
-            }
-        }
-
-        // Handle Auto-Jump (Strict Atomic Implementation)
+        // HANDLE JUMPS
         if (window._pendingTableJump) {
             const jump = window._pendingTableJump;
-            // Clear early to prevent loops
             delete window._pendingTableJump;
-            
-            const targetRow = tbody.children[jump.rowIndex];
-            if (targetRow) {
-                const targetInput = targetRow.querySelector(jump.colClass);
+            setTimeout(() => {
+                const targetRow = tbody.children[jump.rowIndex];
+                const targetInput = targetRow?.querySelector(jump.colClass);
                 if (targetInput) {
-                    setTimeout(() => {
-                        targetInput.focus();
-                        if (targetInput.setSelectionRange) {
-                            targetInput.setSelectionRange(0, targetInput.value.length);
-                        }
-                    }, 0);
+                    targetInput.focus();
+                    if (targetInput.setSelectionRange) targetInput.setSelectionRange(0, 10);
                 }
-            }
+            }, 0);
+        } else if (focusInfo && existingRows.length === periods.length) {
+            const targetRow = tbody.children[focusInfo.index];
+            const targetInput = targetRow?.querySelector(`.${focusInfo.className.replace(/\s+/g, '.')}`);
+            if (targetInput && document.activeElement !== targetInput) targetInput.focus();
         }
     }
 
     updateTable();
 
     return {
-        update: (newUserInfo) => {
-            userInfo = newUserInfo;
-            updateTable();
-        },
+        update: (newUserInfo) => { userInfo = newUserInfo; updateTable(); },
         getData: () => Array.from(tbody.querySelectorAll('tr')).map(row => ({
-            col1: row.cells[0].textContent,
-            col2: row.cells[1].textContent,
+            col1: row.cells[0].textContent, col2: row.cells[1].textContent,
             absent: row.querySelector('.absent-cell').textContent,
-            totalDays: row.cells[3].textContent,
-            earnedLeave: row.cells[4].textContent,
+            totalDays: row.cells[3].textContent, earnedLeave: row.cells[4].textContent,
             cumulativeCredit: row.cells[5].textContent,
             leaveFrom: row.querySelector('.leave-from-input').value,
             leaveTo: row.querySelector('.leave-to-input').value,
-            leaveTaken: row.cells[8].textContent,
-            balance: row.cells[9].textContent
+            leaveTaken: row.cells[8].textContent, balance: row.cells[9].textContent
         }))
     };
 }
