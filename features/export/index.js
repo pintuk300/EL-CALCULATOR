@@ -91,7 +91,7 @@ export function downloadPDF(docData) {
                 { content: 'LEAVE\nEARNED\n(IN DAYS)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                 { content: 'EARNED\nLEAVE AT\nCREDIT\n(10+5)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                 { content: 'UNUTILIZED LEAVE TAKEN PERIOD', colSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
-                { content: 'NO. OF DAYS\nUNUTILIZED\nLEAVE TAKEN', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
+                { content: 'NUMBER OF DAYS\nEARN LEAVE TAKEN', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
                 { content: 'BALANCE OF\nUNUTILIZED EARN\nLEAVE ON RETURN\nFROM LEAVE TAKEN\n(6-9)', rowSpan: 2, styles: { fillColor: blueFill, fontStyle: 'bold' } },
             ],
             [

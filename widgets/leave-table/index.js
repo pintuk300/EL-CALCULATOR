@@ -17,7 +17,7 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                     <th rowspan="2">LEAVE<br>EARNED<br>(IN<br>DAYS)</th>
                     <th rowspan="2">EARNED<br>LEAVE AT<br>CREDIT</th>
                     <th colspan="2">UNUTILIZED LEAVE TAKEN PERIOD</th>
-                    <th rowspan="2">NO. OF DAYS<br>UNUTILIZED<br>LEAVE TAKEN</th>
+                    <th rowspan="2">NUMBER OF<br>DAYS EARN<br>LEAVE TAKEN</th>
                     <th rowspan="2">BALANCE OF<br>UNUTILIZED EARN<br>LEAVE</th>
                 </tr>
                 <tr>
