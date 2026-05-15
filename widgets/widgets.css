@@ -22,25 +22,35 @@
 .label-cell {
     background-color: #f8f9fa;
     font-weight: bold;
-    width: 5%; /* Minimized for specific user layout */
+    width: 5%; 
+    word-break: break-word; /* Allow text to split into lines */
+    line-height: 1.2;
+}
+
+.label-cell-wide {
+    background-color: #f8f9fa;
+    font-weight: bold;
+    width: 12%; /* Increased by 7% as requested */
+    word-break: break-word;
+    line-height: 1.2;
 }
 
 .value-cell {
     background-color: #fff0a0;
     font-weight: bold;
-    width: 15%; /* Exact 15% for dates */
+    width: 15%; 
 }
 
 .value-cell-name {
     background-color: #fff0a0;
     font-weight: bold;
-    width: 25%; /* Exact 25% for Name/Designation */
+    width: 18%; /* Decreased by 7% as requested (25 - 7) */
 }
 
 .value-cell-compact {
     background-color: #fff0a0;
     font-weight: bold;
-    width: 25%; /* Exact 25% for 3Yr and Balance */
+    width: 18%; /* Decreased by 7% as requested (25 - 7) */
 }
 
 .three-year-range {
