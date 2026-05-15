@@ -56,13 +56,25 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
             };
         }
 
-        // ATOMIC BOUNDARY CALCULATION
+        // ATOMIC DATA CORRELATION (Stable Key: Start Date)
         const currentRows = Array.from(tbody.querySelectorAll('tr'));
+        const currentDataMap = new Map();
+        currentRows.forEach(row => {
+            const startKey = row.cells[0]?.textContent;
+            if (startKey) {
+                currentDataMap.set(startKey, {
+                    absent: row.querySelector('.absent-cell').textContent,
+                    leaveFrom: row.querySelector('.leave-from-input').value,
+                    leaveTo: row.querySelector('.leave-to-input').value
+                });
+            }
+        });
+
         const customBoundaries = calculateCustomBoundaries(currentRows);
         const periods = splitPeriodByEffectiveDates(startDate, endDate, userInfo.doj, customBoundaries);
         
         // Identify Exclusion Ranges (Leave Periods)
-        const exclusionRanges = currentData
+        const exclusionRanges = Array.from(currentDataMap.values())
             .map(d => ({ from: parseDDMMYYYYDate(d.leaveFrom), to: parseDDMMYYYYDate(d.leaveTo) }))
             .filter(r => r.from && r.to && r.to >= r.from);
 
@@ -91,9 +103,9 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                 tbody.appendChild(tr);
             }
             
-            const savedRow = currentData[index] || initialRows[index] || {};
             const fromStr = formatDateToDDMMYYYY(period.start);
             const toStr = formatDateToDDMMYYYY(period.end);
+            const savedRow = currentDataMap.get(fromStr) || initialRows.find(r => r.col1 === fromStr) || {};
 
             if (isNewRow) {
                 tr.innerHTML = `
