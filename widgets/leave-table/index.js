@@ -147,15 +147,8 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                 setupMaskedDateInput(tr.querySelector('.leave-from-input'), () => {
                     const val = tr.querySelector('.leave-from-input').value;
                     if (val.length === 10) {
-                        const lFrom = parseDDMMYYYYDate(val);
-                        if (lFrom && lFrom <= period.start) {
-                            alert(`त्रुटि: कॉलम 7 की तारीख (${val}) कॉलम 1 की तारीख (${formatDateToDDMMYYYY(period.start)}) के बाद होनी चाहिए।`);
-                            tr.querySelector('.leave-from-input').value = '';
-                        } else {
-                            // Column 7 to NEXT Row's Column 8 Jump
-                            // Since Col 7 splits the row, the leave actually starts in the next row
-                            window._pendingTableJump = { rowIndex: index + 1, colClass: '.leave-to-input' };
-                        }
+                        // Column 7 to NEXT Row's Column 8 Jump
+                        window._pendingTableJump = { rowIndex: index + 1, colClass: '.leave-to-input' };
                     }
                     updateTable();
                 });
@@ -163,14 +156,8 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                 setupMaskedDateInput(tr.querySelector('.leave-to-input'), () => {
                     const val = tr.querySelector('.leave-to-input').value;
                     if (val.length === 10) {
-                        const lTo = parseDDMMYYYYDate(val);
-                        if (lTo && lTo > period.end) {
-                            alert(`त्रुटि: कॉलम 8 की तारीख (${val}) कॉलम 2 की तारीख (${formatDateToDDMMYYYY(period.end)}) से बाद की नहीं हो सकती। कृपया अधिक अवधि की छुट्टी को अगली पंक्ति में दर्ज करें।`);
-                            tr.querySelector('.leave-to-input').value = '';
-                        } else {
-                            // Column 8 to Next Row's Column 7 Jump
-                            window._pendingTableJump = { rowIndex: index + 1, colClass: '.leave-from-input' };
-                        }
+                        // Column 8 to Next Row's Column 7 Jump
+                        window._pendingTableJump = { rowIndex: index + 1, colClass: '.leave-from-input' };
                     }
                     updateTable();
                 });
