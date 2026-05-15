@@ -100,7 +100,7 @@ export function downloadPDF(docData) {
                 { content: 'FROM', styles: { fillColor: blueFill, fontStyle: 'bold' } },
                 { content: 'TO', styles: { fillColor: blueFill, fontStyle: 'bold' } },
             ],
-            ['1','2','3','4','5','6','7','8','9','10'].map(n => ({ content: n, styles: { fillColor: blueFill, fontStyle: 'bold' } })),
+            ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'].map(n => ({ content: n, styles: { fillColor: blueFill, fontStyle: 'bold' } })),
         ],
         body: docData.rows.map(row => row.map((cell, idx) => ({
             content: cell,

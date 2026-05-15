@@ -14,10 +14,10 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                     <th colspan="2">WORKING PERIOD</th>
                     <th rowspan="2">TOTAL NO. OF<br>WORKING DAYS</th>
                     <th rowspan="2">LEAVE<br>EARNED<br>(IN<br>DAYS)</th>
-                    <th rowspan="2">EARNED<br>LEAVE AT<br>CREDIT</th>
+                    <th rowspan="2">EARNED<br>LEAVE AT<br>CREDIT<br>(9+4)</th>
                     <th colspan="2">Period of Earned Leave Taken/Availed</th>
                     <th rowspan="2">NUMBER OF<br>DAYS EARN<br>LEAVE TAKEN</th>
-                    <th rowspan="2">BALANCE OF<br>EARN<br>LEAVE</th>
+                    <th rowspan="2">BALANCE OF<br>EARN<br>LEAVE ON RETURN<br>FROM LEAVE TAKEN<br>(5-8)</th>
                     <th rowspan="2">REMARKS</th>
                 </tr>
                 <tr>
