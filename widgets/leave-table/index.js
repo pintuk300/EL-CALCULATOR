@@ -147,8 +147,14 @@ export function renderLeaveTable(containerId, initialRows = [], userInfo = {}) {
                 setupMaskedDateInput(tr.querySelector('.leave-from-input'), () => {
                     const val = tr.querySelector('.leave-from-input').value;
                     if (val.length === 10) {
-                        // Column 7 to NEXT Row's Column 8 Jump
-                        window._pendingTableJump = { rowIndex: index + 1, colClass: '.leave-to-input' };
+                        const lFrom = parseDDMMYYYYDate(val);
+                        if (lFrom && lFrom <= period.start) {
+                            alert(`त्रुटि: कॉलम 7 की तारीख (${val}) कॉलम 1 की तारीख (${formatDateToDDMMYYYY(period.start)}) के बाद होनी चाहिए।`);
+                            tr.querySelector('.leave-from-input').value = '';
+                        } else {
+                            // Column 7 to NEXT Row's Column 8 Jump
+                            window._pendingTableJump = { rowIndex: index + 1, colClass: '.leave-to-input' };
+                        }
                     }
                     updateTable();
                 });
